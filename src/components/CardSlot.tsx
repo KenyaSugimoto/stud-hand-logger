@@ -1,0 +1,34 @@
+import type { Card } from "../types";
+
+type Props = {
+	card: Card | null;
+	selected: boolean;
+	onSelect: () => void;
+};
+
+const View = ({ card }: { card: Card | null }) => {
+	if (!card) return <span className="opacity-60"> </span>;
+	if (card.kind === "unknown") return <span className="font-semibold">X</span>;
+	const glyph = { h: "♥", d: "♦", c: "♣", s: "♠" }[card.suit];
+	const cls = card.suit === "h" || card.suit === "d" ? "text-red-600" : "text-gray-100";
+	return (
+		<span className={`font-mono ${cls}`}>
+			{card.rank}
+			{glyph}
+		</span>
+	);
+};
+
+export const CardSlot = (props: Props) => {
+	const { card, selected, onSelect } = props;
+	return (
+		<button
+			type="button"
+			onClick={onSelect}
+			className={`w-10 h-14 rounded-md border flex items-center justify-center shadow
+        ${selected ? "border-blue-500 ring-2 ring-blue-400 bg-blue-50/10" : "border-white bg-blue-900"}`}
+		>
+			<View card={card} />
+		</button>
+	);
+};
