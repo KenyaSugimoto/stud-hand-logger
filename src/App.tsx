@@ -1,18 +1,19 @@
 import "./App.css";
-import { CardSelect } from "./components/CardSelect";
 import { GameTypeSelect } from "./components/GameTypeSelect";
-import { useSelectedGameTypeState } from "./state/SelectedGameTypeState";
-import { StudGameType } from "./types/StudGameType";
+import { Razz } from "./components/Razz";
+import { Stud8 } from "./components/Stud8";
+import { StudHi } from "./components/StudHi";
+import { useTableStore } from "./hooks/useTableStore";
+import { StudGameType } from "./types";
 
 function App() {
-	const { selectedGameType } = useSelectedGameTypeState();
+	const { gameType } = useTableStore();
 	return (
 		<>
 			<GameTypeSelect />
-			{selectedGameType === StudGameType.StudHi && <div>Stud Hi Component Placeholder</div>}
-			{selectedGameType === StudGameType.Razz && <div>Razz Component Placeholder</div>}
-			{selectedGameType === StudGameType.Stud8 && <div>Stud8 Component Placeholder</div>}
-			<CardSelect />
+			{gameType === StudGameType.StudHi && <StudHi />}
+			{gameType === StudGameType.Razz && <Razz />}
+			{gameType === StudGameType.Stud8 && <Stud8 />}
 		</>
 	);
 }

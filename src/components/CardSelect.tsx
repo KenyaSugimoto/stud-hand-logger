@@ -1,44 +1,103 @@
-import { useDeckCards } from "../hooks/useDeckCards";
-import { suitSymbol } from "../utils/display";
+// import { useDeckCards } from "../hooks/useDeckCards";
+import { useTableStore } from "../hooks/useTableStore";
+import type { CardId, RealCard, RealCardId } from "../types";
+import { newUnknown } from "../utils/deck";
 
-export const CardSelect = () => {
-	const { deckCards, assignCard, unassignCard, unknownCards, addUnknownCard } = useDeckCards();
+type CardSelectProps = {
+	disableTaken: Set<CardId>; // 既に使用中の実カード
+};
+
+export const CardSelect = (props: CardSelectProps) => {
+	const { disableTaken } = props;
+
+	const { placeCard } = useTableStore();
+
+	const RANKS = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"] as const;
+	const SUITS = ["s", "h", "d", "c"] as const;
+	const suitGlyph = (s: string) => ({ h: "♥", d: "♦", c: "♣", s: "♠" })[s as "h" | "d" | "c" | "s"];
+	const suitCls = (s: string) => (s === "h" || s === "d" ? "text-red-600" : "text-gray-800");
 
 	return (
-		<>
-			<div className="grid grid-cols-13 gap-2 mb-4">
-				{deckCards.map((card) => (
-					<button
-						type="button"
-						key={card.id}
-						className={`border rounded p-2 ${card.assignedTo ? "bg-blue-500 text-white" : "bg-gray-100"}`}
-						onClick={() => {
-							if (card.assignedTo) {
-								unassignCard(card.id);
-							} else {
-								// TODO: プレイヤーIDとカードインデックスを動的に指定できるようにする
-								// とりあえずP1の1枚目に割り当てる
-								assignCard(card.id, "P1", 1);
-							}
-						}}
-					>
-						{card.rank}
-						{/* TODO: 2色デック or 4色デックの選択ができるようにする */}
-						<span className={card.suit === "h" || card.suit === "d" ? "text-red-500" : "text-black"}>
-							{suitSymbol(card.suit)}
-						</span>
-					</button>
+		<div className="flex gap-4 items-start">
+			<div className="grid grid-rows-4 gap-2">
+				{SUITS.map((s) => (
+					<div key={s} className="flex flex-row gap-2">
+						{RANKS.map((r) => {
+							const id = `${r}${s}` as RealCardId;
+							const disabled = disableTaken.has(id);
+							return (
+								<button
+									type="button"
+									key={id}
+									disabled={disabled}
+									onClick={() => {
+										const targetCard: RealCard = { kind: "real", id, rank: r, suit: s, assignedTo: null };
+										placeCard(targetCard);
+									}}
+									className={`w-14 h-10 border rounded-md font-mono text-sm flex items-center justify-center
+                    ${
+											disabled
+												? "bg-gray-200 text-gray-400 cursor-not-allowed"
+												: "bg-white hover:bg-gray-50 active:scale-[0.98]"
+										}`}
+									title={id}
+								>
+									<span className={suitCls(s)}>
+										{r}
+										{suitGlyph(s)}
+									</span>
+								</button>
+							);
+						})}
+					</div>
 				))}
 			</div>
 
-			{/* 不明カードボタン */}
-			<div className="flex items-center gap-2">
-				<button type="button" className="border rounded p-2 bg-gray-200 hover:bg-gray-300" onClick={addUnknownCard}>
-					X（不明カード追加）
+			<div className="flex flex-col gap-2">
+				<div className="text-xs text-gray-500">Unknown</div>
+				<button
+					type="button"
+					onClick={() => placeCard(newUnknown())}
+					className="w-20 h-10 border rounded-md bg-gray-100 hover:bg-gray-200 font-semibold"
+				>
+					X
 				</button>
-				{/* TODO: 後で消す */}
-				{unknownCards > 0 && <span className="text-sm text-gray-600">選択中: X{unknownCards}</span>}
 			</div>
-		</>
+		</div>
+		// <>
+		// 	<div className="grid grid-cols-13 gap-2 mb-4">
+		// 		{deckCards.map((card) => (
+		// 			<button
+		// 				type="button"
+		// 				key={card.id}
+		// 				className={`border rounded p-2 ${card.assignedTo ? "bg-blue-500 text-white" : "bg-gray-100"}`}
+		// 				onClick={() => {
+		// 					if (card.assignedTo) {
+		// 						unassignCard(card.id);
+		// 					} else {
+		// 						// TODO: プレイヤーIDとカードインデックスを動的に指定できるようにする
+		// 						// とりあえずP1の1枚目に割り当てる
+		// 						assignCard(card.id, "P1", 1);
+		// 					}
+		// 				}}
+		// 			>
+		// 				{card.rank}
+		// 				{/* TODO: 2色デック or 4色デックの選択ができるようにする */}
+		// 				<span className={card.suit === "h" || card.suit === "d" ? "text-red-500" : "text-black"}>
+		// 					{suitSymbol(card.suit)}
+		// 				</span>
+		// 			</button>
+		// 		))}
+		// 	</div>
+
+		// 	{/* 不明カードボタン */}
+		// 	<div className="flex items-center gap-2">
+		// 		<button type="button" className="border rounded p-2 bg-gray-200 hover:bg-gray-300" onClick={addUnknownCard}>
+		// 			X（不明カード追加）
+		// 		</button>
+		// 		{/* TODO: 後で消す */}
+		// 		{unknownCards > 0 && <span className="text-sm text-gray-600">選択中: X{unknownCards}</span>}
+		// 	</div>
+		// </>
 	);
 };

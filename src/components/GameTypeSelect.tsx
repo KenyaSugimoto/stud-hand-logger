@@ -1,26 +1,26 @@
-import { useSelectedGameTypeState } from "../state/SelectedGameTypeState";
-import { StudGameType } from "../types/StudGameType";
+import { useTableStore } from "../hooks/useTableStore";
+import { StudGameType } from "../types";
 
 export const GameTypeSelect = () => {
-	const { selectedGameType, setSelectedGameType } = useSelectedGameTypeState();
+	const { gameType, setGameType } = useTableStore();
 
 	return (
 		<div className="flex justify-center gap-2 mb-4">
-			{Object.values(StudGameType).map((gameType) => (
+			{Object.values(StudGameType).map((gt) => (
 				<button
 					type="button"
-					key={gameType}
-					onClick={() => setSelectedGameType(gameType)}
+					key={gt}
+					onClick={() => setGameType(gt)}
 					className={`
             px-4 py-2 rounded-lg border text-sm font-medium transition
             ${
-							selectedGameType === gameType
+							gameType === gt
 								? "bg-blue-600 text-white border-blue-600 shadow-md"
 								: "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
 						}
           `}
 				>
-					{gameType}
+					{gt}
 				</button>
 			))}
 		</div>
