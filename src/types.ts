@@ -16,9 +16,9 @@ export type SlotGroup = "down" | "up" | "down7"; // 12 / 3456 / 7
 export const SLOT_TO_STREET: Record<SlotIndex, Street> = {
 	0: "3rd",
 	1: "3rd",
-	2: "4th",
-	3: "5th",
-	4: "6th",
+	2: "3rd",
+	3: "4th",
+	4: "5th",
 	5: "6th",
 	6: "7th",
 };

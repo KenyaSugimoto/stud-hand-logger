@@ -1,4 +1,4 @@
-import type { ActionType, PlayerId, Rank, Street } from "./types";
+import type { ActionType, PlayerId, Rank, Street, Suit } from "./types";
 
 // 最大・最小プレイヤー数
 export const MAX_PLAYERS = 8;
@@ -32,4 +32,51 @@ export const NEXT_STREET_MAP: Record<Street, Street | null> = {
 	"5th": "6th",
 	"6th": "7th",
 	"7th": null,
+};
+
+// Rank / Suit の強さ
+export const RANK_VALUE_HI: Record<Exclude<Rank, "X">, number> = {
+	"2": 2,
+	"3": 3,
+	"4": 4,
+	"5": 5,
+	"6": 6,
+	"7": 7,
+	"8": 8,
+	"9": 9,
+	T: 10,
+	J: 11,
+	Q: 12,
+	K: 13,
+	A: 14,
+};
+
+export const RANK_VALUE_RAZZ: Record<Exclude<Rank, "X">, number> = {
+	A: 1,
+	"2": 2,
+	"3": 3,
+	"4": 4,
+	"5": 5,
+	"6": 6,
+	"7": 7,
+	"8": 8,
+	"9": 9,
+	T: 10,
+	J: 11,
+	Q: 12,
+	K: 13,
+};
+
+export const SUIT_VALUE: Record<Suit, number> = {
+	c: 0,
+	d: 1,
+	h: 2,
+	s: 3, // spade が一番強い想定
+};
+
+export const SUIT_VALUE_RAZZ: Record<Suit, number> = {
+	c: 3,
+	d: 2,
+	h: 1,
+	s: 0, // spade が一番弱い想定
 };

@@ -11,6 +11,7 @@ type Props = {
 	bringInCandidate: PlayerId | null;
 	history: ActionType[];
 	alive: boolean;
+	isFirstActor: boolean;
 };
 
 const STREET_TO_VISIBLE_CARD_COUNT = {
@@ -22,7 +23,7 @@ const STREET_TO_VISIBLE_CARD_COUNT = {
 };
 
 export const PlayerRow = (props: Props) => {
-	const { playerId, seatIds, cardsById, onAction, bringInCandidate, history, alive } = props;
+	const { playerId, seatIds, cardsById, onAction, bringInCandidate, history, alive, isFirstActor } = props;
 
 	const { games, gameType } = useTableStore();
 	const currentGame = games[gameType];
@@ -39,11 +40,10 @@ export const PlayerRow = (props: Props) => {
 	const up4 = visibleSeatIds.slice(2, 6);
 	const down7 = currentStreet === "7th" ? (visibleSeatIds[6] ? [visibleSeatIds[6]] : ["X-unknown" as CardId]) : [];
 
-	// bring-inプレイヤーマーカー
-	const isBringInPlayer = [bringInPlayer].includes(playerId);
-
-	// bring-in候補の強調表示
-	const isBringInCandidate = [bringInCandidate].includes(playerId);
+	// bring-inプレイヤーかどうか
+	const isBringInPlayer = bringInPlayer === playerId;
+	// bring-in候補かどうか
+	const isBringInCandidate = bringInCandidate === playerId;
 
 	// foldしたプレイヤーの行は不活性化
 	const rowClass = alive
@@ -63,6 +63,8 @@ export const PlayerRow = (props: Props) => {
 				{isBringInCandidate && <span className="text-blue-400 font-bold">↓</span>}
 				{/* 3rdの場合、実際のbring-inプレイヤーの場合にだけマーク */}
 				{isBringInPlayer && is3rdStreet && <span className="text-orange-400 font-bold">↓</span>}
+				{/* 4th以降で最初にアクションするプレイヤーの場合にだけマーク */}
+				{isFirstActor && !is3rdStreet && <span className="text-orange-400 font-bold">↓</span>}
 			</div>
 
 			{/* 1行カード表示 */}

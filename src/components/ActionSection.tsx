@@ -1,22 +1,18 @@
 import { STREETS } from "../consts";
 import { useTableStore } from "../hooks/useTableStore";
 import type { PlayerId } from "../types";
-import { getBringInCandidate } from "../utils/utils";
+import { getBringInCandidate } from "../utils/getFirstActor";
 import { PlayerActionPanel } from "./PlayerActionPanel";
 
 export const ActionSection = () => {
 	const { games, gameType, addAction, setCurrentStreet } = useTableStore();
 
 	const game = games[gameType];
-	const { playersCount, seats, cardsById, actions, alive, bringInPlayer, currentStreet } = game;
+	const { playersCount, seats, cardsById, actions, bringInPlayer, currentStreet } = game;
 	const visiblePlayers: PlayerId[] = Array.from({ length: playersCount }, (_, i) => `P${i + 1}` as PlayerId);
 
-	// Alive なプレイヤーだけ取得
-	const activePlayers = visiblePlayers.filter((pid) => alive[pid]);
-
 	// bring-in 候補（bring-inのプレイヤーが未確定 かつ 3rdの時だけ計算）
-	const bringInCandidate =
-		!bringInPlayer && currentStreet === "3rd" ? getBringInCandidate(gameType, activePlayers, seats, cardsById) : null;
+	const bringInCandidate = !bringInPlayer && currentStreet === "3rd" ? getBringInCandidate(gameType, game) : null;
 
 	return (
 		<div className="mt-4">
