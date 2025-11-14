@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useTableStore } from "../hooks/useTableStore";
 import { StudGameType } from "../types";
 import { takenRealIds } from "../utils/deck";
+import { ActionSection } from "./ActionSection";
 import { CardSelect } from "./CardSelect";
 import { PlayersSelect } from "./PlayersSelect";
 import { PokerTable } from "./PokerTable";
@@ -23,6 +24,8 @@ export const StudHi = () => {
 			<PlayersSelect gameType={studHi} />
 			<CardSelect disableTaken={disableSet} />
 			<PokerTable gameType={studHi} />
+			<br />
+			<ActionSection />
 		</>
 	);
 };

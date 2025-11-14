@@ -1,4 +1,7 @@
-import type { CardId, RealCard, RealCardId, Slot, Suit, TableState, UnknownCard } from "../types";
+import type { TableState } from "../hooks/useTableStore";
+import type { CardId, RealCard, RealCardId, Slot, Suit, UnknownCard } from "../types";
+
+// TODO: utils.tsにまとめる
 
 export function generateDeck(): Record<RealCardId, RealCard> {
 	const ranks = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"] as const;
@@ -25,18 +28,7 @@ export function newUnknown(): UnknownCard {
 export function assignCard(state: TableState, cardId: CardId, slot: Slot): TableState {
 	const card = state.cardsById[cardId];
 
-	console.log("card", card);
-	console.log("slot", slot);
-
 	if (!card) return state;
-
-	// 実カードは重複不可：他席にあれば外す → UI側で制御するのでコメントアウト
-	// if (card.kind === "real") {
-	// 	for (const pid of state.players) {
-	// 		const idx = state.seats[pid].findIndex((id) => id === cardId);
-	// 		if (idx >= 0) state.seats[pid][idx] = null;
-	// 	}
-	// }
 
 	// 目的スロットへ配置（上書きOK）
 	state.seats[slot.playerId][slot.slotIndex] = cardId;

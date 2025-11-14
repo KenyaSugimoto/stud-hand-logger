@@ -5,16 +5,19 @@ type Props = {
 	playerId: PlayerId;
 	seatIds: Seat; // CardId|null の配列
 	cardsById: Record<CardId, Card>;
-	current?: Slot | null;
+	currentSlot?: Slot | null;
 	focused: boolean;
 	onPickSlot: (idx: SlotIndex) => void;
+	alive: boolean;
 };
 
 export const PlayerSeat = (props: Props) => {
-	const { playerId, seatIds, cardsById, focused, current, onPickSlot } = props;
+	const { playerId, seatIds, cardsById, focused, currentSlot, onPickSlot, alive } = props;
+
+	const disabledStyle = !alive ? "opacity-40 grayscale pointer-events-none" : "";
 
 	const get = (i: SlotIndex) => (seatIds[i] ? cardsById[seatIds[i] as CardId] : null);
-	const isSel = (i: SlotIndex) => current?.playerId === playerId && current.slotIndex === i;
+	const isSel = (i: SlotIndex) => currentSlot?.playerId === playerId && currentSlot.slotIndex === i;
 
 	const onSelect = (i: SlotIndex) => {
 		seatIds[i] = null; // クリックされた時点でカードを外す
@@ -24,7 +27,9 @@ export const PlayerSeat = (props: Props) => {
 	const Slash = <span className="text-black-500 self-center text-4xl">/</span>;
 
 	return (
-		<div className={`flex flex-col items-center gap-1 p-2 rounded-xl ${focused ? "ring-2 ring-blue-400" : ""}`}>
+		<div
+			className={`flex flex-col items-center gap-1 p-2 rounded-xl ${focused ? "ring-2 ring-blue-400" : ""} ${disabledStyle}`}
+		>
 			<div className="text-xs text-gray-100 mb-1">{playerId}</div>
 
 			{/* 3rd */}
