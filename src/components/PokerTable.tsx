@@ -1,5 +1,5 @@
 import { useTableStore } from "../hooks/useTableStore";
-import type { Card, CardId, PlayerId, Seat, Slot, StudGameType, TableState } from "../types";
+import type { Card, CardId, PlayerId, Seat, Slot, StudGameType } from "../types";
 import { PlayerSeat } from "./PlayerSeat";
 
 type Props = {
@@ -9,10 +9,10 @@ type Props = {
 export const PokerTable = (props: Props) => {
 	const { gameType } = props;
 
-	const { games, setCurrent } = useTableStore();
-	const state = games[gameType] as TableState;
+	const { games, setCurrentSlot } = useTableStore();
+	const state = games[gameType];
 
-	const { seats, current, cardsById, playersCount } = state;
+	const { seats, currentSlot, cardsById, playersCount, alive } = state;
 
 	const players = Array.from({ length: playersCount }, (_, i) => `P${i + 1}` as PlayerId);
 
@@ -26,7 +26,6 @@ export const PokerTable = (props: Props) => {
 		return { left: Math.cos(ang) * rx + W / 2, top: Math.sin(ang) * ry + H / 2 };
 	};
 
-	// TODO: ゲームの種類によってテーブルの色を変える (stud hi: 青, razz: オレンジ, stud8: 緑)
 	return (
 		<div className="relative mx-auto" style={{ width: W, height: H }}>
 			<div className="absolute inset-0 rounded-full bg-green-900 border-4 border-gray-700 shadow-inner" />
@@ -39,9 +38,10 @@ export const PokerTable = (props: Props) => {
 							playerId={pid}
 							seatIds={seats[pid] as Seat}
 							cardsById={cardsById as Record<CardId, Card>}
-							current={current as Slot | null}
-							focused={current?.playerId === pid}
-							onPickSlot={(idx) => setCurrent(pid, idx)}
+							currentSlot={currentSlot as Slot | null}
+							focused={currentSlot?.playerId === pid}
+							onPickSlot={(idx) => setCurrentSlot(pid, idx)}
+							alive={alive[pid]}
 						/>
 					</div>
 				);

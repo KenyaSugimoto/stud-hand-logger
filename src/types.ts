@@ -64,9 +64,11 @@ export type UnknownCard = BaseCard & {
 export type Card = RealCard | UnknownCard;
 
 export type Seat = (CardId | null)[]; // 7スロット
-export interface TableState {
-	seats: Record<PlayerId, Seat>; // 各プレイヤーの7枠
-	cardsById: Record<CardId, Card>; // 全カード実体
-	playersCount: number;
-	current: Slot | null;
+
+export type ActionType = "f" | "c" | "b" | "r" | "x" | "bri" | "comp";
+// fold, call, bet, raise, check, bring-in, complete
+
+export interface Action {
+	playerId: PlayerId;
+	type: ActionType;
 }
