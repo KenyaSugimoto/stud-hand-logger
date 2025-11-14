@@ -1,6 +1,7 @@
 import { ACTIONS_3RD, ACTIONS_LATER } from "../consts";
 import { useTableStore } from "../hooks/useTableStore";
-import type { ActionType, Card, CardId, PlayerId } from "../types";
+import type { ActionType, Card, CardId, PlayerId, Rank } from "../types";
+import { getThirdStreetUpCard } from "../utils/getFirstActor";
 import { CardMini } from "./CardMini";
 
 type Props = {
@@ -10,6 +11,8 @@ type Props = {
 	onAction: (playerId: PlayerId, type: ActionType) => void;
 	bringInCandidate: PlayerId | null;
 	history: ActionType[];
+	streetActions: ActionType[];
+	bringInRank: Rank | null;
 	alive: boolean;
 	isFirstActor: boolean;
 };
@@ -23,11 +26,22 @@ const STREET_TO_VISIBLE_CARD_COUNT = {
 };
 
 export const PlayerRow = (props: Props) => {
-	const { playerId, seatIds, cardsById, onAction, bringInCandidate, history, alive, isFirstActor } = props;
+	const {
+		playerId,
+		seatIds,
+		cardsById,
+		onAction,
+		bringInCandidate,
+		history,
+		streetActions,
+		bringInRank,
+		alive,
+		isFirstActor,
+	} = props;
 
 	const { games, gameType } = useTableStore();
 	const currentGame = games[gameType];
-	const { bringInPlayer, currentStreet } = currentGame;
+	const { bringInPlayer, currentStreet, seats } = currentGame;
 
 	const visibleCount = STREET_TO_VISIBLE_CARD_COUNT[currentStreet];
 	const visibleSeatIds = seatIds.slice(0, visibleCount);
@@ -52,6 +66,74 @@ export const PlayerRow = (props: Props) => {
 
 	// 履歴テキスト
 	const historyText = history.length > 0 ? history.join(" / ") : "";
+
+	const self3rdUpCard = getThirdStreetUpCard(seats[playerId], cardsById);
+
+	// そのアクションが可能かどうかを判定する関数
+	const canAct = (action: ActionType): boolean => {
+		if (!alive) return false;
+
+		// betやraiseがされたかどうか
+		const hasBetOrRaise = streetActions.some((h) => h === "b" || h === "r" || h === "comp");
+
+		// --- fold は常に可能 ---
+		if (action === "f") {
+			// bring-inプレイヤーはfoldできない
+			if (isBringInCandidate) return false;
+			return true;
+		}
+
+		// --- bri (bring-in) ---
+		if (action === "bri") {
+			if (!is3rdStreet) return false;
+			if (isBringInPlayer) return false;
+
+			// bring-in 候補本人
+			if (isBringInCandidate) return true;
+
+			// bring-in 候補と同じランクのアップカードを持つ人
+			if (bringInRank && self3rdUpCard && self3rdUpCard.rank === bringInRank) {
+				return true;
+			}
+
+			// それ以外は押せない
+			return false;
+		}
+
+		// --- comp (complete) ---
+		if (action === "comp") {
+			const hasComplete = streetActions.includes("comp");
+			return is3rdStreet && !isBringInPlayer && !hasComplete;
+		}
+
+		// --- check (x) ---
+		if (action === "x") {
+			// そのストリートで誰も bet / raise していない
+			return !hasBetOrRaise;
+		}
+
+		// --- call (c) ---
+		if (action === "c") {
+			return hasBetOrRaise;
+		}
+
+		// --- bet (b) ---
+		if (action === "b") {
+			// 3rd では bet は存在しない
+			if (is3rdStreet) return false;
+
+			// 誰も bet/raise していないときのみ
+			return !hasBetOrRaise;
+		}
+
+		// --- raise (r) ---
+		if (action === "r") {
+			// bet or raise が存在するときのみ
+			return hasBetOrRaise;
+		}
+
+		return true;
+	};
 
 	return (
 		<div className={rowClass}>
@@ -111,9 +193,14 @@ export const PlayerRow = (props: Props) => {
 							type="button"
 							key={a}
 							onClick={() => onAction(playerId, a)}
+							disabled={!canAct(a)}
 							className={[
 								"w-10 h-7 rounded text-xs font-semibold text-white transition-all",
-								isHighlighted ? "bg-blue-500 animate-pulse shadow-lg" : "bg-gray-700 hover:bg-blue-500",
+								!canAct(a)
+									? "bg-gray-500 opacity-40 cursor-not-allowed"
+									: isHighlighted
+										? "bg-blue-500 animate-pulse shadow-lg"
+										: "bg-gray-700 hover:bg-blue-500",
 							].join(" ")}
 						>
 							{a}
