@@ -36,7 +36,7 @@ interface TableStore {
 }
 
 // 各ストリートの初期アクション履歴
-export const createInitialActions = (): Record<Street, Action[]> => ({
+const createInitialActions = (): Record<Street, Action[]> => ({
 	"3rd": [],
 	"4th": [],
 	"5th": [],

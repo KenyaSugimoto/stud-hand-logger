@@ -1,45 +1,11 @@
-import { RANK_RAZZ, RANK_STUD_HI, SUIT_RANK_RAZZ, SUIT_RANK_STUD_HI } from "../consts";
-import { type Action, type ActionType, type Card, type CardId, type PlayerId, type Seat, StudGameType } from "../types";
+import { type Action, type ActionType, type PlayerId } from "../types";
 
-export const getBringInCandidate = (
-	gameType: StudGameType,
-	playerIds: PlayerId[],
-	seats: Record<`P${number}`, Seat>,
-	cardsById: Record<CardId, Card>,
-): PlayerId | null => {
-	let target: { playerId: PlayerId; score: number } | null = null;
-	const rankOrder = gameType === StudGameType.Razz ? RANK_RAZZ : RANK_STUD_HI;
-	const suitRank = gameType === StudGameType.Razz ? SUIT_RANK_RAZZ : SUIT_RANK_STUD_HI;
-
-	for (const pid of playerIds) {
-		// 各プレイヤーの3rdカードを取得
-		const cardId = seats[pid][2];
-		if (!cardId) continue;
-
-		const card = cardsById[cardId];
-		// もし未知のカード(X)ならスキップ
-		if (!card || card.rank === "X") continue;
-
-		const rankIndex: number = rankOrder.indexOf(card.rank);
-		const suitIndex: number = suitRank[card.suit];
-
-		const score: number = rankIndex * 10 + suitIndex;
-
-		// scoreが最も大きいものを bring-in 候補とする
-		const isBetter = target === null || score > target.score;
-		if (isBetter) {
-			target = { playerId: pid, score };
-		}
-	}
-
-	// 見つからなければnullを返す
-	return target?.playerId ?? null;
-};
-
-const BET_ACTIONS: ActionType[] = ["bri", "comp", "b", "r"];
-const TERMINAL_ACTIONS_VS_BET: ActionType[] = ["c", "f"];
-
+// ストリート終了を判定する関数
 export const shouldEndStreet = (streetActions: Action[], alivePlayers: PlayerId[]): boolean => {
+	// ベット系アクションの定義
+	const BET_ACTIONS: ActionType[] = ["bri", "comp", "b", "r"];
+	const TERMINAL_ACTIONS_VS_BET: ActionType[] = ["c", "f"];
+
 	if (streetActions.length === 0) return false;
 
 	// 最後の「ベット系」アクションのインデックスを探す

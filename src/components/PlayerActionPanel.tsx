@@ -1,5 +1,6 @@
 import { useTableStore } from "../hooks/useTableStore";
 import type { Action, ActionType, Card, CardId, PlayerId } from "../types";
+import { getFirstActor } from "../utils/getFirstActor";
 import { PlayerRow } from "./PlayerRow";
 
 type Props = {
@@ -19,6 +20,8 @@ export const PlayerActionPanel = (props: Props) => {
 
 	const { alive, currentStreet } = currentGame;
 
+	const firstToAct = getFirstActor(currentGame, gameType);
+
 	const filteredPlayers = players.filter((pid) => currentStreet === "3rd" || alive[pid]);
 
 	return (
@@ -36,6 +39,7 @@ export const PlayerActionPanel = (props: Props) => {
 					bringInCandidate={bringInCandidate}
 					history={currentStreetActions.filter((a) => a.playerId === pid).map((a) => a.type)}
 					alive={alive[pid]}
+					isFirstActor={pid === firstToAct}
 				/>
 			))}
 
