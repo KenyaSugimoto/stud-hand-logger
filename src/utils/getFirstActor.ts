@@ -217,13 +217,7 @@ export const getFirstActor = (state: TableState, gameType: StudGameType): Player
 	return best?.pid ?? null;
 };
 
-const getThirdStreetUpCard = (
-	playerId: PlayerId,
-	seats: Record<PlayerId, Seat>,
-	cardsById: Record<CardId, Card>,
-): RealCard | null => {
-	const seat = seats[playerId];
-
+export const getThirdStreetUpCard = (seat: Seat, cardsById: Record<CardId, Card>): RealCard | null => {
 	for (let idx = 0; idx < seat.length; idx++) {
 		const cardId = seat[idx];
 		if (!cardId) continue;
@@ -284,7 +278,7 @@ export const getBringInCandidate = (gameType: StudGameType, state: TableState): 
 	let worst: { pid: PlayerId; score: number } | null = null;
 
 	for (const pid of activePlayers) {
-		const upCard = getThirdStreetUpCard(pid, seats, cardsById);
+		const upCard = getThirdStreetUpCard(seats[pid], cardsById);
 
 		if (!upCard) continue;
 
