@@ -1,14 +1,7 @@
 import { useTableStore } from "../hooks/useTableStore";
-import type { StudGameType } from "../types";
 
-type Props = {
-	gameType: StudGameType;
-};
-
-export const ResetButton = (props: Props) => {
-	const { gameType } = props;
-
-	const { resetGame } = useTableStore();
+export const ResetButton = () => {
+	const { resetGame, gameType } = useTableStore();
 
 	return (
 		<div>

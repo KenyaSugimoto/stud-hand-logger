@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { STREETS } from "../consts";
+import { GAME_TYPE_LABELS, STREETS } from "../consts";
 import { getPlayers, useTableStore } from "../hooks/useTableStore";
 import type { Action, Card, CardId, PlayerId, Seat, Street } from "../types";
 import { getFirstActorForStreet } from "../utils/getFirstActor";
@@ -104,7 +104,7 @@ export const ActionLogPanel = () => {
 		const streetActions = actions[street];
 		if (!streetActions.length) return null;
 
-		const lines: string[] = [];
+		const lines: string[] = [`${GAME_TYPE_LABELS[gameType]}`];
 		lines.push(`< ${street} >`);
 
 		// この street 時点で alive のプレイヤーだけを出す

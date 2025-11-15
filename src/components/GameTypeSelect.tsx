@@ -1,11 +1,6 @@
+import { GAME_TYPE_LABELS } from "../consts";
 import { useTableStore } from "../hooks/useTableStore";
 import { StudGameType } from "../types";
-
-const LABELS: Record<StudGameType, string> = {
-	STUD_HI: "Stud Hi",
-	RAZZ: "Razz",
-	STUD_8: "Stud 8",
-};
 
 const ACTIVE_TAB: Record<StudGameType, string> = {
 	STUD_HI: "bg-blue-600 text-white border-blue-500",
@@ -39,7 +34,7 @@ export const GameTypeSelect = () => {
 							${active ? `${ACTIVE_TAB[gt]} shadow-md -mb-[1px]` : `${INACTIVE_TAB[gt]} border-gray-300`}
 							`}
 						>
-							{LABELS[gt]}
+							{GAME_TYPE_LABELS[gt]}
 						</button>
 					);
 				})}

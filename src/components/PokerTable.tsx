@@ -1,11 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTableStore } from "../hooks/useTableStore";
-import type { PlayerId, StudGameType } from "../types";
+import type { PlayerId } from "../types";
 import { PlayerSeat } from "./PlayerSeat";
-
-type Props = {
-	gameType: StudGameType;
-};
 
 const TABLE_COLORS = {
 	STUD_HI: {
@@ -31,8 +27,8 @@ const BASE_TABLE = {
 	seatRadiusY: 180, // 縦方向の半径
 };
 
-export const PokerTable = ({ gameType }: Props) => {
-	const { games, setCurrentSlot } = useTableStore();
+export const PokerTable = () => {
+	const { games, setCurrentSlot, gameType } = useTableStore();
 	const state = games[gameType];
 
 	const { seats, currentSlot, cardsById, playersCount, alive } = state;

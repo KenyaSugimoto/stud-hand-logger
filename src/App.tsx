@@ -29,14 +29,14 @@ export default function App() {
 				{/* 🔵 右パネル（スクロール / 最低幅確保） */}
 				<div
 					className="
-          min-w-[800px]
-          max-w-[1200px]
-          flex-shrink-0
-          overflow-y-auto
-          overflow-x-hidden
-          border-l border-gray-300
-          p-4
-        "
+						min-w-[800px]
+						max-w-[1200px]
+						flex-shrink-0
+						overflow-y-auto
+						overflow-x-hidden
+						border-l border-gray-300
+						p-4
+					"
 				>
 					{gameType === StudGameType.StudHi && <StudHi.Right />}
 					{gameType === StudGameType.Razz && <Razz.Right />}
