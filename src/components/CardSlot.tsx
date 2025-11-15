@@ -26,7 +26,7 @@ export const CardSlot = (props: Props) => {
 			type="button"
 			onClick={onSelect}
 			className={`w-10 h-14 rounded-md border flex items-center justify-center shadow
-        ${selected ? "border-blue-500 ring-2 ring-blue-400 bg-blue-50/10" : "border-white bg-blue-900"}`}
+        ${selected ? "border-white ring-2 ring-white shadow-[0_0_10px_white] bg-white-50/10" : "border-white bg-blue-900"}`}
 		>
 			<View card={card} />
 		</button>
