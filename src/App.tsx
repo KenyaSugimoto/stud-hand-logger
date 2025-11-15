@@ -1,6 +1,7 @@
 import "./App.css";
 import { GameTypeSelect } from "./components/GameTypeSelect";
 import { Razz } from "./components/Razz";
+import { SettingsSection } from "./components/SettingsSection";
 import { Stud8 } from "./components/Stud8";
 import { StudHi } from "./components/StudHi";
 import { useTableStore } from "./hooks/useTableStore";
@@ -41,6 +42,9 @@ export default function App() {
 					{gameType === StudGameType.Razz && <Razz.Right />}
 					{gameType === StudGameType.Stud8 && <Stud8.Right />}
 				</div>
+
+				{/* 🔵 設定 */}
+				<SettingsSection />
 			</div>
 		</div>
 	);

@@ -72,3 +72,6 @@ export interface Action {
 	playerId: PlayerId;
 	type: ActionType;
 }
+
+export type CardTheme = "white" | "dark";
+export type SuitColorMode = "two" | "four";

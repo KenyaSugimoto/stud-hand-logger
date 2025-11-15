@@ -9,7 +9,7 @@ type Props = {
 
 const TABLE_COLORS = {
 	STUD_HI: {
-		outer: "bg-blue-900 border-blue-700",
+		outer: "bg-blue-900 border-blue-700 ",
 		inner: "bg-blue-800/40",
 	},
 	RAZZ: {
@@ -90,7 +90,7 @@ export const PokerTable = ({ gameType }: Props) => {
 				}}
 			>
 				{/* outer */}
-				<div className={`absolute inset-0 rounded-full border-4 shadow-inner ${color.outer}`} />
+				<div className={`absolute inset-0 rounded-full border-16 shadow-inner ${color.outer}`} />
 
 				{/* inner */}
 				<div className={`absolute inset-${BASE_TABLE.padding} rounded-full ${color.inner}`} />
