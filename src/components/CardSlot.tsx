@@ -1,17 +1,12 @@
 import { useTableStore } from "../hooks/useTableStore";
-import type { Card } from "../types";
+import type { Card, SuitColorMode } from "../types";
 import { getSuitColorClass } from "../utils/style";
-
-type Theme = "white" | "game" | "dark";
-type SuitColorMode = "two" | "four";
 
 type Props = {
 	card: Card | null;
 	selected: boolean;
 	onSelect: () => void;
 	size: number;
-	theme?: Theme;
-	suitColorMode?: SuitColorMode;
 };
 
 //

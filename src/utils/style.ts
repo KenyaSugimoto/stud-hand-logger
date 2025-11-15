@@ -1,7 +1,6 @@
 import type { Card, SuitColorMode } from "../types";
-//
+
 // ---- スートカラーのClassを決定する関数 ----
-//
 export const getSuitColorClass = (card: Card | null, isDark: boolean, mode: SuitColorMode) => {
 	if (!card) return isDark ? "text-gray-200" : "text-gray-700";
 	if (card.kind === "unknown") {

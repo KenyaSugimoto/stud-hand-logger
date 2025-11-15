@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useTableStore } from "../hooks/useTableStore";
-import type { PlayerId, Seat, StudGameType } from "../types";
+import type { PlayerId, StudGameType } from "../types";
 import { PlayerSeat } from "./PlayerSeat";
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
 
 const TABLE_COLORS = {
 	STUD_HI: {
-		outer: "bg-blue-900 border-blue-700 ",
+		outer: "bg-blue-900 border-blue-700",
 		inner: "bg-blue-800/40",
 	},
 	RAZZ: {
@@ -26,7 +26,7 @@ const TABLE_COLORS = {
 const BASE_TABLE = {
 	width: 900,
 	height: 520, // テーブルの縦サイズ
-	padding: 12, // outer → inner
+	padding: 10, // outer → inner
 	seatRadiusX: 340, // 横方向の半径
 	seatRadiusY: 180, // 縦方向の半径
 };
@@ -90,10 +90,15 @@ export const PokerTable = ({ gameType }: Props) => {
 				}}
 			>
 				{/* outer */}
-				<div className={`absolute inset-0 rounded-full border-16 shadow-inner ${color.outer}`} />
+				<div className={`absolute inset-0 rounded-full border-8 shadow-inner ${color.outer}`} />
 
 				{/* inner */}
-				<div className={`absolute inset-${BASE_TABLE.padding} rounded-full ${color.inner}`} />
+				<div
+					className={`absolute rounded-full ${color.inner}`}
+					style={{
+						inset: BASE_TABLE.padding,
+					}}
+				/>
 
 				{/* players */}
 				{players.map((pid, i) => {
@@ -102,7 +107,7 @@ export const PokerTable = ({ gameType }: Props) => {
 						<div key={pid} className="absolute -translate-x-1/2 -translate-y-1/2" style={{ left: p.left, top: p.top }}>
 							<PlayerSeat
 								playerId={pid}
-								seatIds={seats[pid] as Seat}
+								seatIds={seats[pid]}
 								cardsById={cardsById}
 								currentSlot={currentSlot}
 								focused={currentSlot?.playerId === pid}
