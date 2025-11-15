@@ -278,7 +278,7 @@ export const useTableStore = create<TableStore>()(
 		},
 
 		// カードの見た目設定
-		cardTheme: "white",
+		cardTheme: "light",
 		suitColorMode: "two",
 		setCardTheme: (theme) => set({ cardTheme: theme }),
 		setCardSuitColor: (mode) => set({ suitColorMode: mode }),

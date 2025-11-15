@@ -36,7 +36,7 @@ export const PlayerActionPanel = (props: Props) => {
 	}
 
 	return (
-		<div className="bg-neutral-800 rounded-lg p-3 mt-2">
+		<div className="bg-neutral-500 rounded-lg p-3 mt-2">
 			<h3 className="text-sm font-semibold text-gray-200 mb-2">{currentStreet.toUpperCase()} Actions</h3>
 
 			{/* 各プレイヤー行 */}

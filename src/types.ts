@@ -73,5 +73,5 @@ export interface Action {
 	type: ActionType;
 }
 
-export type CardTheme = "white" | "dark";
+export type CardTheme = "light" | "dark";
 export type SuitColorMode = "two" | "four";

@@ -39,7 +39,7 @@ export const PlayerRow = (props: Props) => {
 		isFirstActor,
 	} = props;
 
-	const { games, gameType } = useTableStore();
+	const { games, gameType, suitColorMode, cardTheme } = useTableStore();
 	const currentGame = games[gameType];
 	const { bringInPlayer, currentStreet, seats } = currentGame;
 
@@ -154,27 +154,42 @@ export const PlayerRow = (props: Props) => {
 				{/* 12 */}
 				<div className="flex gap-1">
 					{down2.map((id) => (
-						<CardMini key={`d-${id}-${Math.random().toString(36).slice(2, 6)}`} card={id ? cardsById[id] : null} />
+						<CardMini
+							key={`d-${id}-${Math.random().toString(36).slice(2, 6)}`}
+							card={id ? cardsById[id] : null}
+							suitColorMode={suitColorMode}
+							cardTheme={cardTheme}
+						/>
 					))}
 				</div>
 
 				{/* / */}
-				{up4.length > 0 && <span className="text-gray-500 text-xs">/</span>}
+				{up4.length > 0 && <span className="text-black-500 text-lg font-bold">/</span>}
 
 				{/* 3456 */}
 				<div className="flex gap-1">
 					{up4.map((id) => (
-						<CardMini key={`u-${id}-${Math.random().toString(36).slice(2, 6)}`} card={id ? cardsById[id] : null} />
+						<CardMini
+							key={`u-${id}-${Math.random().toString(36).slice(2, 6)}`}
+							card={id ? cardsById[id] : null}
+							suitColorMode={suitColorMode}
+							cardTheme={cardTheme}
+						/>
 					))}
 				</div>
 
 				{/* / */}
-				{down7.length > 0 && <span className="text-gray-500 text-xs">/</span>}
+				{down7.length > 0 && <span className="text-black-500 text-lg font-bold">/</span>}
 
 				{/* 7 */}
 				<div className="flex gap-1">
 					{down7.map((id) => (
-						<CardMini key={`r-${id}-${Math.random().toString(36).slice(2, 6)}`} card={id ? cardsById[id] : null} />
+						<CardMini
+							key={`r-${id}-${Math.random().toString(36).slice(2, 6)}`}
+							card={id ? cardsById[id] : null}
+							suitColorMode={suitColorMode}
+							cardTheme={cardTheme}
+						/>
 					))}
 				</div>
 			</div>
