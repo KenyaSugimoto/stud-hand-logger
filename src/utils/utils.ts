@@ -1,4 +1,4 @@
-import { type Action, type ActionType, type PlayerId } from "../types";
+import type { Action, ActionType, PlayerId, Suit } from "../types";
 
 // ストリート終了を判定する関数
 export const shouldEndStreet = (streetActions: Action[], alivePlayers: PlayerId[]): boolean => {
@@ -51,3 +51,5 @@ export const shouldEndStreet = (streetActions: Action[], alivePlayers: PlayerId[
 	// 全ての alive プレイヤーが最後のベットに対して c か f 済み
 	return true;
 };
+
+export const suitGlyph = (s: Suit) => ({ h: "♥", d: "♦", c: "♣", s: "♠" })[s];

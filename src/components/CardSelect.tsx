@@ -4,6 +4,7 @@ import { useTableStore } from "../hooks/useTableStore";
 import type { Card, CardId, RealCard, RealCardId } from "../types";
 import { newUnknown } from "../utils/deck";
 import { getSuitColorClass } from "../utils/style";
+import { suitGlyph } from "../utils/utils";
 
 type CardSelectProps = {
 	disableTaken: Set<CardId>; // 既に使用中の実カード
@@ -16,9 +17,8 @@ export const CardSelect = (props: CardSelectProps) => {
 
 	const RANKS = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"] as const;
 	const SUITS = ["s", "h", "d", "c"] as const;
-	const suitGlyph = (s: string) => ({ h: "♥", d: "♦", c: "♣", s: "♠" })[s as "h" | "d" | "c" | "s"];
 
-	// 🔵 縦長カードの寸法
+	// 縦長カードの寸法
 	const CARD_W = 44;
 	const CARD_H = Math.round(CARD_W * CARD_ASPECT_RATIO);
 
@@ -55,7 +55,7 @@ export const CardSelect = (props: CardSelectProps) => {
 								</button>
 							);
 						})}
-						{/* 🔵 Unknown カードを同じ行の最後に統合 */}
+						{/* Unknown カードを同じ行の最後に統合 */}
 						{s === "c" && (
 							<button
 								type="button"

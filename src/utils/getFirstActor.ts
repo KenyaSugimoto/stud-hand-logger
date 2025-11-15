@@ -1,4 +1,4 @@
-import { RANK_VALUE_HI, RANK_VALUE_RAZZ, SUIT_VALUE, SUIT_VALUE_RAZZ } from "../consts";
+import { RANK_VALUE_HI, RANK_VALUE_RAZZ, STREETS, SUIT_VALUE, SUIT_VALUE_RAZZ } from "../consts";
 import { getPlayers, type TableState } from "../hooks/useTableStore";
 import {
 	type Card,
@@ -205,6 +205,48 @@ export const getFirstActor = (state: TableState, gameType: StudGameType): Player
 
 	for (const pid of activePlayers) {
 		const upCards = getUpCardsOnStreet(pid, currentStreet, seats, cardsById);
+		if (!upCards.length) continue;
+
+		const score = getBoardScoreByGame(gameType, upCards);
+
+		if (!best || compareBoardScore(score, best.score) > 0) {
+			best = { pid, score };
+		}
+	}
+
+	return best?.pid ?? null;
+};
+
+// 指定ストリート開始時点での生存判定関数
+const isAliveAtStartStreet = (state: TableState, pid: PlayerId, street: Street): boolean => {
+	const { actions } = state;
+
+	// 3rdストリートは全員アクティブ
+	if (street === "3rd") {
+		return true;
+	}
+
+	const idx = STREETS.indexOf(street);
+	const relevant = STREETS.slice(0, idx); // 4th:1, ...
+
+	for (const st of relevant) {
+		if (actions[st].some((a) => a.playerId === pid && a.type === "f")) {
+			return false;
+		}
+	}
+	return true;
+};
+
+// 指定ストリート(4th以降)の firstActor を取得する関数
+export const getFirstActorForStreet = (state: TableState, gameType: StudGameType, street: Street): PlayerId | null => {
+	const { seats, cardsById, playersCount } = state;
+
+	const activePlayers = getPlayers(playersCount).filter((pid) => isAliveAtStartStreet(state, pid, street));
+
+	let best: { pid: PlayerId; score: BoardScore } | null = null;
+
+	for (const pid of activePlayers) {
+		const upCards = getUpCardsOnStreet(pid, street, seats, cardsById);
 		if (!upCards.length) continue;
 
 		const score = getBoardScoreByGame(gameType, upCards);

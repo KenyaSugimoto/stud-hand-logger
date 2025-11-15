@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-import { INITIAL_ALIVE, INITIAL_PLAYERS, MAX_PLAYERS, NEXT_STREET_MAP } from "../consts";
+import { INITIAL_ALIVE, INITIAL_PLAYERS, MAX_PLAYERS, NEXT_STREET_MAP, STREETS } from "../consts";
 import type {
 	Action,
 	Card,
@@ -120,12 +120,22 @@ export const useTableStore = create<TableStore>()(
 			if (!currentGame.currentSlot) return;
 
 			let updated = { ...currentGame };
+
+			// unknown カード
 			if (card.kind === "unknown") {
-				updated.cardsById[card.id] = card;
+				updated = {
+					...updated,
+					cardsById: { ...updated.cardsById, [card.id]: card },
+				};
 			}
+
 			updated = assignCard(updated, card.id, currentGame.currentSlot);
+
 			const nextIndex = Math.min(currentGame.currentSlot.slotIndex + 1, 6) as SlotIndex;
-			updated.currentSlot = { ...currentGame.currentSlot, slotIndex: nextIndex };
+			updated = {
+				...updated,
+				currentSlot: { ...currentGame.currentSlot, slotIndex: nextIndex },
+			};
 
 			set({
 				games: { ...games, [gameType]: updated },
@@ -166,49 +176,58 @@ export const useTableStore = create<TableStore>()(
 		addAction: (street, action) => {
 			const { gameType, games } = get();
 			const g = games[gameType];
-			const updated = { ...g };
 
-			// bri が押された時の処理
+			// --- actions を deep immutable に更新 ---
+			const newActions = {
+				...g.actions,
+				[street]: [...g.actions[street], action],
+			};
+
+			let updated: TableState = {
+				...g,
+				actions: newActions,
+			};
+
+			// bri の特殊処理
 			if (street === "3rd" && action.type === "bri") {
-				updated.bringInPlayer = action.playerId;
-
-				// bri アクションを先頭に追加し、既存の bri は削除
-				updated.actions["3rd"] = [
-					{ playerId: action.playerId, type: "bri" },
-					...g.actions["3rd"].filter((a) => a.type !== "bri"),
-				];
-
-				// bring-in候補リセット
-				updated.bringInCandidate = null;
-
-				set({
-					games: {
-						...games,
-						[gameType]: updated,
+				const filtered = g.actions["3rd"].filter((a) => a.type !== "bri");
+				updated = {
+					...updated,
+					actions: {
+						...updated.actions,
+						["3rd" as Street]: [{ playerId: action.playerId, type: "bri" }, ...filtered],
 					},
+					bringInPlayer: action.playerId,
+					bringInCandidate: null,
+				};
+
+				return set({
+					games: { ...games, [gameType]: updated },
 				});
-
-				return;
 			}
-
-			// 通常アクション追加
-			updated.actions[street] = [...g.actions[street], action];
 
 			// fold → alive false
 			if (action.type === "f") {
-				updated.alive = { ...g.alive, [action.playerId]: false };
+				updated = {
+					...updated,
+					alive: {
+						...updated.alive,
+						[action.playerId]: false,
+					},
+				};
 			}
 
-			// ★ 自動ストリート進行 -----------------------------
-			// このストリートで alive な人数
+			// --- ストリート自動遷移 ---
 			const alivePlayers = getPlayers(updated.playersCount).filter((pid) => updated.alive[pid]);
-
 			const streetActions = updated.actions[street];
 
 			if (shouldEndStreet(streetActions, alivePlayers)) {
-				const next = NEXT_STREET_MAP[street]; // さっきの Record<Street, Street | null>
+				const next = NEXT_STREET_MAP[street];
 				if (next) {
-					updated.currentStreet = next;
+					updated = {
+						...updated,
+						currentStreet: next,
+					};
 				}
 			}
 
@@ -223,41 +242,85 @@ export const useTableStore = create<TableStore>()(
 		removeLastAction: (street) => {
 			const { gameType, games } = get();
 			const current = games[gameType];
-			const list = [...current.actions[street]];
-			const removed = list.pop();
 
-			const updatedAlive = { ...current.alive };
+			const oldList = current.actions[street];
+			if (oldList.length === 0) return;
+
+			const removed = oldList[oldList.length - 1];
+			const newList = oldList.slice(0, -1);
+
+			let newState: TableState = {
+				...current,
+				actions: {
+					...current.actions,
+					[street]: newList,
+				},
+			};
+
+			// fold を戻す
 			if (removed?.type === "f") {
-				updatedAlive[removed.playerId] = true;
+				newState = {
+					...newState,
+					alive: { ...newState.alive, [removed.playerId]: true },
+				};
+			}
+
+			// bri を戻す
+			if (street === "3rd" && removed?.type === "bri") {
+				newState = {
+					...newState,
+					bringInPlayer: null,
+				};
 			}
 
 			set({
 				games: {
 					...games,
-					[gameType]: {
-						...current,
-						actions: { ...current.actions, [street]: list },
-						alive: updatedAlive,
-						// 3rdでbriを取り消した場合、bring-inもリセット
-						bringInPlayer: street === "3rd" && removed?.type === "bri" ? null : current.bringInPlayer,
-					},
+					[gameType]: newState,
 				},
 			});
 		},
 
 		clearStreetActions: (street) => {
 			const { gameType, games } = get();
-			const currentGame = games[gameType];
-			const updated: Record<Street, Action[]> = { ...currentGame.actions, [street]: [] };
+			const current = games[gameType];
+
+			const newActions = {
+				...current.actions,
+				[street]: [],
+			};
+
+			// このストリート開始時までに既にfoldしていたプレイヤーのリスト
+			const foldedPlayersAtStartStreet = getPlayers(MAX_PLAYERS).filter((pid) => {
+				if (street === "3rd") return false; // 3rd開始時は必ず生存
+
+				const idx = STREETS.indexOf(street);
+				const relevant = STREETS.slice(0, idx); // 4th:1, ...
+
+				for (const st of relevant) {
+					if (current.actions[st].some((a) => a.playerId === pid && a.type === "f")) {
+						return true;
+					}
+				}
+				return false;
+			});
+
+			const newAlive: Record<PlayerId, boolean> = { ...INITIAL_ALIVE };
+			foldedPlayersAtStartStreet.forEach((pid) => {
+				newAlive[pid] = false;
+			});
+
+			const newState: TableState = {
+				...current,
+				actions: newActions,
+				bringInPlayer: street === "3rd" ? null : current.bringInPlayer,
+				alive: newAlive,
+			};
+
 			set({
 				games: {
 					...games,
-					[gameType]: {
-						...currentGame,
-						actions: updated,
-						// 3rdでクリアした場合、bring-inもリセット
-						bringInPlayer: street === "3rd" ? null : currentGame.bringInPlayer,
-					},
+					[gameType]: newState,
 				},
 			});
 		},

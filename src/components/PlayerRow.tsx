@@ -96,6 +96,11 @@ export const PlayerRow = (props: Props) => {
 				return true;
 			}
 
+			// 誰もまだアクションしていない場合
+			if (streetActions.length === 0) {
+				return true;
+			}
+
 			// それ以外は押せない
 			return false;
 		}
@@ -114,7 +119,8 @@ export const PlayerRow = (props: Props) => {
 
 		// --- call (c) ---
 		if (action === "c") {
-			return hasBetOrRaise;
+			const hasBringIn = streetActions.includes("bri");
+			return hasBetOrRaise || (is3rdStreet && hasBringIn);
 		}
 
 		// --- bet (b) ---
@@ -195,7 +201,7 @@ export const PlayerRow = (props: Props) => {
 			</div>
 
 			{/* 履歴表示 */}
-			<div className="flex-1 text-xs text-gray-400 font-mono">{historyText}</div>
+			<div className="flex-1 text-sm text-white font-mono">{historyText}</div>
 
 			{/* アクションボタン群 */}
 			<div className="flex gap-1 ml-auto">
