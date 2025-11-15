@@ -104,7 +104,7 @@ useEffect(() => { ... }, [userId])
 
 * 変数名・関数名はキャメルケース
 * React は関数コンポーネント必須
-* 状態は Context / Store に集約し、Props drilling を避ける
+* 状態は Context / Store に集約し、prop drilling を避ける
 * UI ライブラリ（MUI / Tailwind など）はプロジェクトの方針に従う
 * API コールは共通の fetch wrapper を用いる
 
