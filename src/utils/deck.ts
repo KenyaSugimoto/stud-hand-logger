@@ -25,28 +25,50 @@ export function newUnknown(): UnknownCard {
 	};
 }
 
-export function assignCard(state: TableState, cardId: CardId, slot: Slot): TableState {
+export const assignCard = (state: TableState, cardId: CardId, slot: Slot): TableState => {
 	const card = state.cardsById[cardId];
-
 	if (!card) return state;
 
-	// 目的スロットへ配置（上書きOK）
-	state.seats[slot.playerId][slot.slotIndex] = cardId;
-	state.cardsById[cardId] = { ...card, assignedTo: { ...slot } };
-	return { ...state, seats: { ...state.seats }, cardsById: { ...state.cardsById } };
-}
+	// deep clone
+	const newSeats = { ...state.seats };
+	newSeats[slot.playerId] = [...state.seats[slot.playerId]];
 
-export function unassignCard(state: TableState, cardId: CardId): TableState {
+	const newCards = { ...state.cardsById };
+
+	// assign
+	newSeats[slot.playerId][slot.slotIndex] = cardId;
+	newCards[cardId] = { ...card, assignedTo: { ...slot } };
+
+	return {
+		...state,
+		seats: newSeats,
+		cardsById: newCards,
+	};
+};
+
+export const unassignCard = (state: TableState, cardId: CardId): TableState => {
 	const c = state.cardsById[cardId];
 	if (!c || !c.assignedTo) return state;
-	const { playerId, slotIndex } = c.assignedTo;
-	state.seats[playerId][slotIndex] = null;
-	state.cardsById[cardId] = { ...c, assignedTo: null };
-	return { ...state, seats: { ...state.seats }, cardsById: { ...state.cardsById } };
-}
+
+	// deep clone
+	const newSeats = { ...state.seats };
+	newSeats[c.assignedTo.playerId] = [...state.seats[c.assignedTo.playerId]];
+
+	const newCards = { ...state.cardsById };
+
+	// unassign
+	newSeats[c.assignedTo.playerId][c.assignedTo.slotIndex] = null;
+	newCards[cardId] = { ...c, assignedTo: null };
+
+	return {
+		...state,
+		seats: newSeats,
+		cardsById: newCards,
+	};
+};
 
 // 現在テーブルに配置されている実カードID一覧を取得
-export function takenRealIds(state: TableState): Set<CardId> {
+export const takenRealIds = (state: TableState): Set<CardId> => {
 	const s = new Set<CardId>();
 	Object.values(state.seats).forEach((seat) => {
 		seat.forEach((id) => {
@@ -56,4 +78,4 @@ export function takenRealIds(state: TableState): Set<CardId> {
 		});
 	});
 	return s;
-}
+};

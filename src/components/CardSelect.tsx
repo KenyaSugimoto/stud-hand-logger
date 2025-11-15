@@ -1,24 +1,22 @@
 // import { useDeckCards } from "../hooks/useDeckCards";
+import { useMemo } from "react";
 import { CARD_ASPECT_RATIO } from "../consts";
 import { useTableStore } from "../hooks/useTableStore";
-import type { Card, CardId, RealCard, RealCardId } from "../types";
-import { newUnknown } from "../utils/deck";
+import type { Card, RealCard, RealCardId } from "../types";
+import { newUnknown, takenRealIds } from "../utils/deck";
 import { getSuitColorClass } from "../utils/style";
+import { suitGlyph } from "../utils/utils";
 
-type CardSelectProps = {
-	disableTaken: Set<CardId>; // 既に使用中の実カード
-};
+export const CardSelect = () => {
+	const { placeCard, suitColorMode, games, gameType } = useTableStore();
+	const state = games[gameType];
 
-export const CardSelect = (props: CardSelectProps) => {
-	const { disableTaken } = props;
-
-	const { placeCard, suitColorMode } = useTableStore();
+	const disableSet = useMemo(() => takenRealIds(state), [state]);
 
 	const RANKS = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"] as const;
 	const SUITS = ["s", "h", "d", "c"] as const;
-	const suitGlyph = (s: string) => ({ h: "♥", d: "♦", c: "♣", s: "♠" })[s as "h" | "d" | "c" | "s"];
 
-	// 🔵 縦長カードの寸法
+	// 縦長カードの寸法
 	const CARD_W = 44;
 	const CARD_H = Math.round(CARD_W * CARD_ASPECT_RATIO);
 
@@ -29,7 +27,7 @@ export const CardSelect = (props: CardSelectProps) => {
 					<div key={s} className="flex flex-row gap-2">
 						{RANKS.map((r) => {
 							const id = `${r}${s}` as RealCardId;
-							const disabled = disableTaken.has(id);
+							const disabled = disableSet.has(id);
 							return (
 								<button
 									type="button"
@@ -55,7 +53,7 @@ export const CardSelect = (props: CardSelectProps) => {
 								</button>
 							);
 						})}
-						{/* 🔵 Unknown カードを同じ行の最後に統合 */}
+						{/* Unknown カードを同じ行の最後に統合 */}
 						{s === "c" && (
 							<button
 								type="button"

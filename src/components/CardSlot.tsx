@@ -1,6 +1,7 @@
 import { useTableStore } from "../hooks/useTableStore";
 import type { Card, SuitColorMode } from "../types";
 import { getStyleByCardTheme, getSuitColorClass } from "../utils/style";
+import { suitGlyph } from "../utils/utils";
 
 type Props = {
 	card: Card | null;
@@ -24,7 +25,7 @@ const View = ({
 	if (!card) return <span className="opacity-40"> </span>;
 	if (card.kind === "unknown") return <span>X</span>;
 
-	const glyph = { h: "♥", d: "♦", c: "♣", s: "♠" }[card.suit];
+	const glyph = suitGlyph(card.suit);
 
 	const color = getSuitColorClass(card, isDark, suitColorMode);
 

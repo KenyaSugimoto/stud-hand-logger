@@ -1,4 +1,4 @@
-import type { ActionType, CardTheme, PlayerId, Rank, Street, Suit, SuitColorMode } from "./types";
+import type { ActionType, CardTheme, PlayerId, Rank, Street, StudGameType, Suit, SuitColorMode } from "./types";
 
 // 最大・最小プレイヤー数
 export const MAX_PLAYERS = 8;
@@ -87,3 +87,10 @@ export const SUIT_COLOR_MODE_VALUES: SuitColorMode[] = ["two", "four"];
 
 // カードのアスペクト比
 export const CARD_ASPECT_RATIO = 1.4;
+
+// ゲームタイプのラベル
+export const GAME_TYPE_LABELS: Record<StudGameType, string> = {
+	STUD_HI: "Stud Hi",
+	RAZZ: "Razz",
+	STUD_8: "Stud 8",
+};

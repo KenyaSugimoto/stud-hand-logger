@@ -1,6 +1,7 @@
 import { CARD_ASPECT_RATIO } from "../consts";
 import type { Card, CardTheme, SuitColorMode } from "../types";
 import { getStyleByCardTheme, getSuitColorClass } from "../utils/style";
+import { suitGlyph } from "../utils/utils";
 
 type Props = {
 	card: Card | null;
@@ -28,7 +29,7 @@ export const CardMini = (props: Props) => {
 			</div>
 		);
 
-	const glyph = { h: "♥", d: "♦", c: "♣", s: "♠" }[card.suit];
+	const glyph = suitGlyph(card.suit);
 	const color = getSuitColorClass(card, cardTheme === "dark", suitColorMode);
 
 	return (

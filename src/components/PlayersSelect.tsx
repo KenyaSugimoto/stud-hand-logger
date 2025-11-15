@@ -1,10 +1,5 @@
 import { MAX_PLAYERS, MIN_PLAYERS } from "../consts";
 import { useTableStore } from "../hooks/useTableStore";
-import type { StudGameType } from "../types";
-
-type PlayersSelectProps = {
-	gameType: StudGameType;
-};
 
 const GAME_COLORS = {
 	STUD_HI: {
@@ -21,9 +16,8 @@ const GAME_COLORS = {
 	},
 } as const;
 
-export const PlayersSelect = (props: PlayersSelectProps) => {
-	const { gameType } = props;
-	const { games, setPlayersCount } = useTableStore();
+export const PlayersSelect = () => {
+	const { games, setPlayersCount, gameType } = useTableStore();
 
 	const playersCount = games[gameType].playersCount;
 	const counts = Array.from({ length: MAX_PLAYERS - MIN_PLAYERS + 1 }, (_, i) => i + MIN_PLAYERS);
