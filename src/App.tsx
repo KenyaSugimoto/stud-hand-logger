@@ -4,6 +4,7 @@ import { GameTypeSelect } from "./components/GameTypeSelect";
 import { MobileInputView } from "./components/mobile/MobileInputView";
 import { PlayersSelect } from "./components/PlayersSelect";
 import { Razz } from "./components/Razz";
+import { ResetButton } from "./components/ResetButton";
 import { SettingsSection } from "./components/SettingsSection";
 import { Stud8 } from "./components/Stud8";
 import { StudHi } from "./components/StudHi";
@@ -24,8 +25,13 @@ export default function App() {
 					<GameTypeSelect />
 				</div>
 
-				<div className="flex-1 items-center pt-2 m-2">
-					<PlayersSelect />
+				<div className="flex flex-col pt-2 m-2">
+					<div className="flex justify-start mb-2">
+						<PlayersSelect />
+					</div>
+					<div className="mt-2 flex justify-end mb-0">
+						<ResetButton />
+					</div>
 				</div>
 
 				<div className="flex-1 overflow-y-auto">

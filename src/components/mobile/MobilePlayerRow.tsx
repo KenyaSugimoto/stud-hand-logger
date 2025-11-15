@@ -75,7 +75,7 @@ export const MobilePlayerRow = (props: Props) => {
 				{/* down2 */}
 				{down2.map((id, idx) => (
 					<CardSlot
-						key={`d-${id}-${playerId}`}
+						key={`d-${id}-${Math.random().toString(36).slice(2, 6)}`}
 						card={get(idx)}
 						selected={isSel(idx as SlotIndex)}
 						onSelect={() => onSelect(idx as SlotIndex)}
@@ -92,7 +92,7 @@ export const MobilePlayerRow = (props: Props) => {
 					const realIndex = idx + 2;
 					return (
 						<CardSlot
-							key={`u-${id}-${playerId}`}
+							key={`u-${id}-${Math.random().toString(36).slice(2, 6)}`}
 							card={get(realIndex)}
 							selected={isSel(realIndex as SlotIndex)}
 							onSelect={() => onSelect(realIndex as SlotIndex)}
@@ -110,7 +110,7 @@ export const MobilePlayerRow = (props: Props) => {
 					const realIndex = idx + 6; // always index 6
 					return (
 						<CardSlot
-							key={`r-${id}-${playerId}`}
+							key={`r-${id}-${Math.random().toString(36).slice(2, 6)}`}
 							card={get(realIndex)}
 							selected={isSel(realIndex as SlotIndex)}
 							onSelect={() => onSelect(realIndex as SlotIndex)}

@@ -10,7 +10,7 @@ export const MobileInputView = () => {
 	const state = games[gameType];
 
 	return (
-		<div className="w-full px-2 py-3 flex flex-col gap-4">
+		<div className="w-full px-2 pb-3 flex flex-col gap-4">
 			{/* Street ごとのアコーディオン */}
 			{STREETS.map((street) => (
 				<MobileStreetBlock key={street} street={street as Street} state={state} />
