@@ -94,3 +94,11 @@ export const GAME_TYPE_LABELS: Record<StudGameType, string> = {
 	RAZZ: "Razz",
 	STUD_8: "Stud 8",
 };
+
+export const STREET_TO_VISIBLE_CARD_COUNT = {
+	"3rd": 3, // down2 + up1
+	"4th": 4,
+	"5th": 5,
+	"6th": 6,
+	"7th": 7,
+};

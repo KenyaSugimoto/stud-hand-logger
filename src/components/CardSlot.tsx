@@ -8,6 +8,7 @@ type Props = {
 	selected: boolean;
 	onSelect: () => void;
 	scale: number;
+	isMobile?: boolean;
 };
 
 //
@@ -40,11 +41,16 @@ const View = ({
 //
 // ---- Main ----
 //
-export const CardSlot = ({ card, selected, onSelect, scale }: Props) => {
+export const CardSlot = ({ card, selected, onSelect, scale, isMobile = false }: Props) => {
 	const { cardTheme, suitColorMode } = useTableStore();
 	const isDark = cardTheme === "dark";
 
 	const styles = getStyleByCardTheme(cardTheme);
+
+	// 📱 モバイルなら固定サイズで表示
+	const width = isMobile ? 20 : 35 * scale;
+	const height = isMobile ? 28 : 48 * scale;
+	const fontSize = isMobile ? 13 : 16 * scale;
 
 	return (
 		<button
@@ -53,9 +59,10 @@ export const CardSlot = ({ card, selected, onSelect, scale }: Props) => {
 			className={`flex items-center justify-center rounded-md border shadow-sm transition-all
         ${selected ? styles.selected : styles.normal}`}
 			style={{
-				width: 35 * scale,
-				height: 48 * scale,
-				fontSize: `${16 * scale}px`,
+				width,
+				height,
+				fontSize,
+				flexShrink: 0,
 			}}
 		>
 			<View card={card} isDark={isDark} suitColorMode={suitColorMode} />

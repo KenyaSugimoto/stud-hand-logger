@@ -24,12 +24,25 @@ export const PlayerSeat = (props: Props) => {
 		onPickSlot(i);
 	};
 
-	const Slash = <span className="text-black-500 self-center text-4xl">/</span>;
+	// PC / Mobile で Slash サイズを切り替え
+	const Slash = <span className="text-4xl self-center">/</span>;
+
+	// スケール調整 (スマホだと更に小さくする)
+	const scaleValue = scale;
 
 	return (
 		<div
-			className={`flex flex-col items-center gap-1 p-2 rounded-xl bg-white/20 ${focused ? "ring-2 ring-white shadow-[0_0_10px_white]" : ""} ${disabledStyle}`}
-			style={{ transform: `scale(${scale})`, transformOrigin: "center" }}
+			className={`
+				flex flex-col items-center
+				"p-2 gap-1"
+				rounded-xl bg-white/20
+				${focused ? "ring-2 ring-white shadow-[0_0_10px_white]" : ""}
+				${disabledStyle}
+			`}
+			style={{
+				transform: `scale(${scale})`,
+				transformOrigin: "center",
+			}}
 		>
 			<div className="text-xs text-gray-100 mb-1">{playerId}</div>
 
@@ -42,7 +55,7 @@ export const PlayerSeat = (props: Props) => {
 						card={get(i as 0 | 1)}
 						selected={isSel(i as 0 | 1)}
 						onSelect={() => onSelect(i as 0 | 1)}
-						scale={scale}
+						scale={scaleValue}
 					/>
 				))}
 				{Slash}
@@ -53,7 +66,7 @@ export const PlayerSeat = (props: Props) => {
 						card={get(i as 2)}
 						selected={isSel(i as 2)}
 						onSelect={() => onSelect(i as 2)}
-						scale={scale}
+						scale={scaleValue}
 					/>
 				))}
 			</div>
@@ -65,7 +78,7 @@ export const PlayerSeat = (props: Props) => {
 						card={get(i as 3 | 4 | 5)}
 						selected={isSel(i as 3 | 4 | 5)}
 						onSelect={() => onSelect(i as 3 | 4 | 5)}
-						scale={scale}
+						scale={scaleValue}
 					/>
 				))}
 				{Slash}
@@ -75,7 +88,7 @@ export const PlayerSeat = (props: Props) => {
 						card={get(i as 6)}
 						selected={isSel(i as 6)}
 						onSelect={() => onSelect(i as 6)}
-						scale={scale}
+						scale={scaleValue}
 					/>
 				))}
 			</div>

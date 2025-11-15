@@ -218,7 +218,7 @@ export const getFirstActor = (state: TableState, gameType: StudGameType): Player
 };
 
 // 指定ストリート開始時点での生存判定関数
-const isAliveAtStartStreet = (state: TableState, pid: PlayerId, street: Street): boolean => {
+export const isAliveAtStartStreet = (state: TableState, pid: PlayerId, street: Street): boolean => {
 	const { actions } = state;
 
 	// 3rdストリートは全員アクティブ

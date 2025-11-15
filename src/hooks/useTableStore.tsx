@@ -104,10 +104,17 @@ export const useTableStore = create<TableStore>()(
 			const { gameType, games } = get();
 			const currentGame = games[gameType];
 
+			const newSeats = [...currentGame.seats[playerId]];
+			newSeats[slotIndex] = null; // 既存のカードをクリア
+
 			set({
 				games: {
 					...games,
-					[gameType]: { ...currentGame, currentSlot: { playerId, slotIndex } },
+					[gameType]: {
+						...currentGame,
+						seats: { ...currentGame.seats, [playerId]: newSeats },
+						currentSlot: { playerId, slotIndex },
+					},
 				},
 			});
 		},

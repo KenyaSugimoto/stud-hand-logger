@@ -8,14 +8,20 @@ import { ResetButton } from "./ResetButton";
 export const StudHi = {
 	Left: () => {
 		return (
-			<div className="w-full h-full flex flex-col overflow-hidden px-6 pt-4 gap-4">
-				{/* 🔵 Seat Count（左寄せ） */}
-				<div className="">
+			<div
+				className="
+					w-full h-full flex flex-col
+					px-3 md:px-6
+					pt-3 md:pt-4
+					gap-3 md:gap-4
+					overflow-visible md:overflow-hidden
+				"
+			>
+				<div>
 					<PlayersSelect />
 				</div>
 
-				{/* 🔵 Poker Table（中心寄せ + スケール + 最大高さ） */}
-				<div className="flex-1 flex items-center justify-center overflow-hidden max-h-[75vh]">
+				<div className="flex-1 flex items-center justify-center overflow-visible md:overflow-hidden max-h-[75vh]">
 					<PokerTable />
 				</div>
 			</div>

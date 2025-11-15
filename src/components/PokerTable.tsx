@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useTableStore } from "../hooks/useTableStore";
-import type { PlayerId } from "../types";
+import { getPlayers, useTableStore } from "../hooks/useTableStore";
 import { PlayerSeat } from "./PlayerSeat";
 
 const TABLE_COLORS = {
@@ -21,10 +20,10 @@ const TABLE_COLORS = {
 // 🎛️ いじっていいパラメータ（席配置調整はここだけ）
 const BASE_TABLE = {
 	width: 900,
-	height: 520, // テーブルの縦サイズ
-	padding: 10, // outer → inner
-	seatRadiusX: 340, // 横方向の半径
-	seatRadiusY: 180, // 縦方向の半径
+	height: 520,
+	padding: 10,
+	seatRadiusX: 340,
+	seatRadiusY: 180,
 };
 
 export const PokerTable = () => {
@@ -33,7 +32,7 @@ export const PokerTable = () => {
 
 	const { seats, currentSlot, cardsById, playersCount, alive } = state;
 
-	const players = Array.from({ length: playersCount }, (_, i) => `P${i + 1}` as PlayerId);
+	const players = getPlayers(playersCount);
 
 	// scale 計算用
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -46,6 +45,8 @@ export const PokerTable = () => {
 	useEffect(() => {
 		const resize = () => {
 			if (!containerRef.current) return;
+
+			// コンテナの幅を基準に scale を計算
 			const w = containerRef.current.offsetWidth;
 
 			let s = w / BASE_TABLE.width;

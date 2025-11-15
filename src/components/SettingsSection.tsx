@@ -39,14 +39,15 @@ export const SettingsSection = () => {
 				type="button"
 				onClick={() => setOpen(!open)}
 				className="
-						absolute bottom-4 left-4
-						w-12 h-12
-						rounded-full shadow-lg
-						bg-white hover:bg-gray-100
-						text-gray-900 text-2xl
-						flex items-center justify-center
-						transition-all
-					"
+					fixed bottom-4 right-4 z-40
+					w-14 h-14
+					rounded-full shadow-xl
+					bg-white hover:bg-gray-100
+					text-gray-900 text-2xl
+					flex items-center justify-center
+					transition-all
+					opacity-90 hover:opacity-100
+				"
 			>
 				<svg
 					className="h-8 w-8 text-gray-900"
@@ -71,11 +72,11 @@ export const SettingsSection = () => {
 				<div
 					ref={panelRef}
 					className="
-							absolute bottom-20 left-4
-							w-72 p-4
-							bg-white shadow-2xl rounded-xl border
-							animate-popIn
-						"
+						fixed bottom-24 right-4 z-50
+						w-72 p-4
+						bg-white shadow-2xl rounded-xl border
+						animate-popIn
+					"
 				>
 					<div className="flex justify-between items-center mb-3">
 						<h3 className="text-sm font-semibold text-gray-800">Settings</h3>
