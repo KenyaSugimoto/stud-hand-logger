@@ -28,7 +28,7 @@ export const PlayerSeat = (props: Props) => {
 
 	return (
 		<div
-			className={`flex flex-col items-center gap-1 p-2 rounded-xl ${focused ? "ring-2 ring-blue-400" : ""} ${disabledStyle}`}
+			className={`flex flex-col items-center gap-1 p-2 rounded-xl ${focused ? "ring-2 ring-white shadow-[0_0_10px_white]" : ""} ${disabledStyle}`}
 		>
 			<div className="text-xs text-gray-100 mb-1">{playerId}</div>
 
