@@ -162,7 +162,7 @@ export const PlayerRow = (props: Props) => {
 				</div>
 
 				{/* / */}
-				{up4.length > 0 && <span className="text-black-500 text-lg font-bold">/</span>}
+				{up4.length > 0 && <span className="text-gray-500 text-lg font-bold">/</span>}
 
 				{/* 3456 */}
 				<div className="flex gap-1">
@@ -177,7 +177,7 @@ export const PlayerRow = (props: Props) => {
 				</div>
 
 				{/* / */}
-				{down7.length > 0 && <span className="text-black-500 text-lg font-bold">/</span>}
+				{down7.length > 0 && <span className="text-gray-500 text-lg font-bold">/</span>}
 
 				{/* 7 */}
 				<div className="flex gap-1">

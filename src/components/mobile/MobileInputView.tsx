@@ -1,4 +1,3 @@
-// components/MobileInputView.tsx
 import { STREETS } from "../../consts";
 import { useTableStore } from "../../hooks/useTableStore";
 import type { Street } from "../../types";

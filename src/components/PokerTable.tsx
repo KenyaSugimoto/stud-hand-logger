@@ -18,19 +18,12 @@ const TABLE_COLORS = {
 } as const;
 
 // 🎛️ いじっていいパラメータ（席配置調整はここだけ）
-const BASE_TABLE_PC = {
+const BASE_TABLE = {
 	width: 900,
 	height: 520,
 	padding: 10,
 	seatRadiusX: 340,
 	seatRadiusY: 180,
-};
-const BASE_TABLE_MB = {
-	width: 420,
-	height: 310,
-	padding: 8,
-	seatRadiusX: 165,
-	seatRadiusY: 110,
 };
 
 export const PokerTable = () => {
@@ -41,18 +34,13 @@ export const PokerTable = () => {
 
 	const players = getPlayers(playersCount);
 
-	// スマホ判定
-	const isMobile = window.innerWidth < 768;
-	// PC / Mobile でテーブル基準値を切り替え
-	const BASE_TABLE = isMobile ? BASE_TABLE_MB : BASE_TABLE_PC;
-
 	// scale 計算用
 	const containerRef = useRef<HTMLDivElement>(null);
-	const [scale, setScale] = useState(2);
+	const [scale, setScale] = useState(1);
 
 	// scale の最小・最大値
 	const MIN_SCALE = 0.45;
-	const MAX_SCALE = isMobile ? 2 : 1;
+	const MAX_SCALE = 1;
 
 	useEffect(() => {
 		const resize = () => {
@@ -71,7 +59,7 @@ export const PokerTable = () => {
 		resize();
 		window.addEventListener("resize", resize);
 		return () => window.removeEventListener("resize", resize);
-	}, [BASE_TABLE, MAX_SCALE]);
+	}, []);
 
 	// 🎯 座標計算（見た目と完全一致）
 	const { cx, cy } = useMemo(
@@ -79,7 +67,7 @@ export const PokerTable = () => {
 			cx: (BASE_TABLE.width * scale) / 2,
 			cy: (BASE_TABLE.height * scale) / 2,
 		}),
-		[scale, BASE_TABLE],
+		[scale],
 	);
 
 	const pos = (i: number) => {
@@ -128,7 +116,6 @@ export const PokerTable = () => {
 								onPickSlot={(idx) => setCurrentSlot(pid, idx)}
 								alive={alive[pid]}
 								scale={scale}
-								isMobile={isMobile}
 							/>
 						</div>
 					);

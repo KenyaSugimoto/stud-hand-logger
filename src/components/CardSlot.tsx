@@ -62,7 +62,7 @@ export const CardSlot = ({ card, selected, onSelect, scale, isMobile = false }: 
 				width,
 				height,
 				fontSize,
-				minWidth: width,
+				flexShrink: 0,
 			}}
 		>
 			<View card={card} isDark={isDark} suitColorMode={suitColorMode} />

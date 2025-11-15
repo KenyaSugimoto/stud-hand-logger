@@ -1,4 +1,3 @@
-// components/MobileStreetBlock.tsx
 import type { TableState } from "../../hooks/useTableStore"; // or export TableState from hook
 import { getPlayers, useTableStore } from "../../hooks/useTableStore";
 import type { PlayerId, Street } from "../../types";
@@ -54,6 +53,7 @@ export const MobileStreetBlock = ({ street, state }: Props) => {
 						cardsById={state.cardsById}
 						currentSlot={state.currentSlot}
 						onPickSlot={(slotIndex) => setCurrentSlot(pid, slotIndex)}
+						alive={state.alive[pid]}
 					/>
 				))}
 			</div>

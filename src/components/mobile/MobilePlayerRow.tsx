@@ -1,9 +1,7 @@
-// components/MobilePlayerRow.tsx
-
 import { STREET_TO_VISIBLE_CARD_COUNT } from "../../consts";
 import { useTableStore } from "../../hooks/useTableStore";
 import type { Card, CardId, PlayerId, Seat, Slot, SlotIndex, Street } from "../../types";
-import { getThirdStreetUpCard } from "../../utils/getFirstActor";
+import { getFirstActor } from "../../utils/getFirstActor";
 import { CardSlot } from "../CardSlot";
 import { MobileActionButtons } from "./MobileActionButtons";
 
@@ -14,27 +12,25 @@ type Props = {
 	cardsById: Record<CardId, Card>;
 	currentSlot: Slot | null;
 	onPickSlot: (idx: SlotIndex) => void;
+	alive: boolean;
 };
 
 export const MobilePlayerRow = (props: Props) => {
-	const { street, playerId, seatIds, cardsById, currentSlot, onPickSlot } = props;
+	const { street, playerId, seatIds, cardsById, currentSlot, onPickSlot, alive } = props;
 	const { games, gameType } = useTableStore();
 	const state = games[gameType];
+	const { bringInPlayer, bringInCandidate } = state;
 
 	// bring-in 情報
 	const is3rd = street === "3rd";
-	const bringInPlayer = state.bringInPlayer;
-	const bringInCandidate = state.bringInCandidate;
 
 	const isBringInPlayer = bringInPlayer === playerId;
 	const isBringInCandidate = bringInCandidate === playerId;
 
 	// first actor
-	const upCard = getThirdStreetUpCard(seatIds, cardsById);
-	const bringInRank = upCard?.rank || null;
+	const isFirstActor = getFirstActor(state, gameType) === playerId;
 
 	const streetActions = state.actions[street];
-	const isFirstActor = !is3rd && streetActions.length === 0 && bringInRank && upCard?.rank === bringInRank;
 
 	// visible cards
 	const visible = STREET_TO_VISIBLE_CARD_COUNT[street];
@@ -50,7 +46,6 @@ export const MobilePlayerRow = (props: Props) => {
 	const isSel = (i: SlotIndex) => currentSlot?.playerId === playerId && currentSlot.slotIndex === i;
 
 	const onSelect = (i: SlotIndex) => {
-		seatIds[i] = null;
 		onPickSlot(i);
 	};
 
@@ -58,9 +53,6 @@ export const MobilePlayerRow = (props: Props) => {
 	const history = streetActions.filter((a) => a.playerId === playerId).map((a) => a.type);
 
 	const historyText = history.length > 0 ? history.join(" / ") : "";
-
-	// alive?
-	const alive = state.alive[playerId];
 
 	return (
 		<div
@@ -83,7 +75,7 @@ export const MobilePlayerRow = (props: Props) => {
 				{/* down2 */}
 				{down2.map((id, idx) => (
 					<CardSlot
-						key={`d-${id}-${Math.random().toString(36).slice(2, 6)}`}
+						key={`d-${id}-${playerId}`}
 						card={get(idx)}
 						selected={isSel(idx as SlotIndex)}
 						onSelect={() => onSelect(idx as SlotIndex)}
@@ -100,7 +92,7 @@ export const MobilePlayerRow = (props: Props) => {
 					const realIndex = idx + 2;
 					return (
 						<CardSlot
-							key={`u-${id}-${Math.random().toString(36).slice(2, 6)}`}
+							key={`u-${id}-${playerId}`}
 							card={get(realIndex)}
 							selected={isSel(realIndex as SlotIndex)}
 							onSelect={() => onSelect(realIndex as SlotIndex)}
@@ -118,7 +110,7 @@ export const MobilePlayerRow = (props: Props) => {
 					const realIndex = idx + 6; // always index 6
 					return (
 						<CardSlot
-							key={`r-${id}-${Math.random().toString(36).slice(2, 6)}`}
+							key={`r-${id}-${playerId}`}
 							card={get(realIndex)}
 							selected={isSel(realIndex as SlotIndex)}
 							onSelect={() => onSelect(realIndex as SlotIndex)}
@@ -130,7 +122,7 @@ export const MobilePlayerRow = (props: Props) => {
 			</div>
 
 			{/* 履歴 */}
-			<div className="text-[10px] text-black text-bold font-mono w-14 text-left">{historyText}</div>
+			<div className="text-[10px] text-black font-semibold font-mono w-14 text-left">{historyText}</div>
 
 			{/* アクション */}
 			<MobileActionButtons street={street} playerId={playerId} />

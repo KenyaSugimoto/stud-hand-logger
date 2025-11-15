@@ -7,14 +7,14 @@ import { Razz } from "./components/Razz";
 import { SettingsSection } from "./components/SettingsSection";
 import { Stud8 } from "./components/Stud8";
 import { StudHi } from "./components/StudHi";
+import { useIsMobile } from "./hooks/useIsMobile";
 import { useTableStore } from "./hooks/useTableStore";
 import { StudGameType } from "./types";
 
 export default function App() {
 	const { gameType } = useTableStore();
 
-	// シンプルなモバイル判定（SSR 想定なし前提）
-	const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+	const isMobile = useIsMobile();
 
 	if (isMobile) {
 		// 📱 モバイル：テーブルなし・入力ビューのみ

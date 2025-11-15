@@ -1,4 +1,3 @@
-// components/MobileActionButtons.tsx
 import { ACTIONS_3RD, ACTIONS_LATER } from "../../consts";
 import { useTableStore } from "../../hooks/useTableStore";
 import type { ActionType, PlayerId, Street } from "../../types";
