@@ -23,8 +23,8 @@ export const GameTypeSelect = () => {
 	const { gameType, setGameType } = useTableStore();
 
 	return (
-		<div className="flex justify-center mb-4">
-			<div className="flex gap-1 items-end border-b border-gray-300 pb-[2px]">
+		<div className="flex">
+			<div className="flex gap-1 items-end">
 				{Object.values(StudGameType).map((gt) => {
 					const active = gameType === gt;
 
@@ -34,10 +34,10 @@ export const GameTypeSelect = () => {
 							type="button"
 							onClick={() => setGameType(gt)}
 							className={`
-                px-4 py-2 text-sm font-semibold transition-all
-                border border-b-0 rounded-t-md
-                ${active ? `${ACTIVE_TAB[gt]} shadow-md -mb-[1px]` : `${INACTIVE_TAB[gt]} border-gray-300`}
-              `}
+							px-4 py-2 text-sm font-semibold transition-all
+							border border-b-0 rounded-t-md
+							${active ? `${ACTIVE_TAB[gt]} shadow-md -mb-[1px]` : `${INACTIVE_TAB[gt]} border-gray-300`}
+							`}
 						>
 							{LABELS[gt]}
 						</button>

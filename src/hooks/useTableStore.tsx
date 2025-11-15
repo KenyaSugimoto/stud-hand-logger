@@ -125,7 +125,8 @@ export const useTableStore = create<TableStore>()(
 			set((state) => ({
 				games: {
 					...state.games,
-					[type]: createInitialSlice(),
+					// playerCount は維持
+					[type]: { ...createInitialSlice(), playersCount: state.games[type].playersCount },
 				},
 			}));
 		},
