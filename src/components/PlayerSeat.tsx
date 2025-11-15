@@ -15,7 +15,6 @@ type Props = {
 export const PlayerSeat = (props: Props) => {
 	const { playerId, seatIds, cardsById, focused, currentSlot, onPickSlot, alive, scale } = props;
 	const disabledStyle = !alive ? "opacity-40 grayscale pointer-events-none" : "";
-	const size = 1 * scale; // サイズ倍率
 
 	const get = (i: SlotIndex) => (seatIds[i] ? cardsById[seatIds[i] as CardId] : null);
 	const isSel = (i: SlotIndex) => currentSlot?.playerId === playerId && currentSlot.slotIndex === i;
@@ -43,7 +42,7 @@ export const PlayerSeat = (props: Props) => {
 						card={get(i as 0 | 1)}
 						selected={isSel(i as 0 | 1)}
 						onSelect={() => onSelect(i as 0 | 1)}
-						size={size}
+						scale={scale}
 					/>
 				))}
 				{Slash}
@@ -54,7 +53,7 @@ export const PlayerSeat = (props: Props) => {
 						card={get(i as 2)}
 						selected={isSel(i as 2)}
 						onSelect={() => onSelect(i as 2)}
-						size={size}
+						scale={scale}
 					/>
 				))}
 			</div>
@@ -66,7 +65,7 @@ export const PlayerSeat = (props: Props) => {
 						card={get(i as 3 | 4 | 5)}
 						selected={isSel(i as 3 | 4 | 5)}
 						onSelect={() => onSelect(i as 3 | 4 | 5)}
-						size={size}
+						scale={scale}
 					/>
 				))}
 				{Slash}
@@ -76,7 +75,7 @@ export const PlayerSeat = (props: Props) => {
 						card={get(i as 6)}
 						selected={isSel(i as 6)}
 						onSelect={() => onSelect(i as 6)}
-						size={size}
+						scale={scale}
 					/>
 				))}
 			</div>

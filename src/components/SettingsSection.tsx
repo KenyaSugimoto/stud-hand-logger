@@ -43,13 +43,13 @@ export const SettingsSection = () => {
 						w-12 h-12
 						rounded-full shadow-lg
 						bg-white hover:bg-gray-100
-						text-gray-500 text-2xl
+						text-gray-900 text-2xl
 						flex items-center justify-center
 						transition-all
 					"
 			>
 				<svg
-					className="h-8 w-8 text-gray-500"
+					className="h-8 w-8 text-gray-900"
 					width="24"
 					height="24"
 					viewBox="0 0 24 24"
@@ -79,7 +79,7 @@ export const SettingsSection = () => {
 				>
 					<div className="flex justify-between items-center mb-3">
 						<h3 className="text-sm font-semibold text-gray-800">Settings</h3>
-						<button type="button" onClick={() => setOpen(false)} className="text-gray-500 hover:text-gray-700">
+						<button type="button" onClick={() => setOpen(false)} className="text-gray-900 hover:text-gray-700">
 							✕
 						</button>
 					</div>

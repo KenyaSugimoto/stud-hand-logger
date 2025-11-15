@@ -13,7 +13,7 @@ export default function App() {
 	return (
 		<div className="w-full h-screen flex flex-col overflow-hidden bg-white">
 			{/* 🔵 上部（左寄せ） tabs */}
-			<div className="w-full flex-shrink-0 flex items-center py-2 border-b border-gray-200 pb-0 ">
+			<div className="w-full flex-shrink-0 flex items-center pt-2 border-b border-gray-200">
 				<GameTypeSelect />
 			</div>
 

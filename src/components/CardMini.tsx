@@ -1,3 +1,4 @@
+import { CARD_ASPECT_RATIO } from "../consts";
 import type { Card, CardTheme, SuitColorMode } from "../types";
 import { getStyleByCardTheme, getSuitColorClass } from "../utils/style";
 
@@ -11,7 +12,7 @@ export const CardMini = (props: Props) => {
 	const { card, suitColorMode, cardTheme } = props;
 
 	const CARD_WIDTH = 28;
-	const CARD_HEIGHT = Math.round(CARD_WIDTH * 1.4); // 縦横比 1:1.4
+	const CARD_HEIGHT = Math.round(CARD_WIDTH * CARD_ASPECT_RATIO); // 縦横比 1:1.4
 
 	const styles = getStyleByCardTheme(cardTheme);
 

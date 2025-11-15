@@ -81,5 +81,9 @@ export const SUIT_VALUE_RAZZ: Record<Suit, number> = {
 	s: 0, // spade が一番弱い想定
 };
 
+// カードテーマ・スートカラーモードの選択肢
 export const CARD_THEME_VALUES: CardTheme[] = ["light", "dark"];
 export const SUIT_COLOR_MODE_VALUES: SuitColorMode[] = ["two", "four"];
+
+// カードのアスペクト比
+export const CARD_ASPECT_RATIO = 1.4;

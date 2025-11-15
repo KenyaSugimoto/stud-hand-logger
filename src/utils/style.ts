@@ -47,7 +47,5 @@ export const getStyleByCardTheme = (theme: CardTheme) => {
 			return { normal: LIGHT_NORMAL, selected: LIGHT_SELECTED };
 		case "dark":
 			return { normal: DARK_NORMAL, selected: DARK_SELECTED };
-		default:
-			return { normal: LIGHT_NORMAL, selected: LIGHT_SELECTED };
 	}
 };

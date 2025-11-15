@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTableStore } from "../hooks/useTableStore";
 import type { PlayerId, StudGameType } from "../types";
 import { PlayerSeat } from "./PlayerSeat";
@@ -65,8 +65,13 @@ export const PokerTable = ({ gameType }: Props) => {
 	}, []);
 
 	// 🎯 座標計算（見た目と完全一致）
-	const cx = (BASE_TABLE.width * scale) / 2;
-	const cy = (BASE_TABLE.height * scale) / 2;
+	const { cx, cy } = useMemo(
+		() => ({
+			cx: (BASE_TABLE.width * scale) / 2,
+			cy: (BASE_TABLE.height * scale) / 2,
+		}),
+		[scale],
+	);
 
 	const pos = (i: number) => {
 		const ang = (i / players.length) * Math.PI * 2 - Math.PI / 2;

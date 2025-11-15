@@ -6,7 +6,7 @@ type Props = {
 	card: Card | null;
 	selected: boolean;
 	onSelect: () => void;
-	size: number;
+	scale: number;
 };
 
 //
@@ -39,7 +39,7 @@ const View = ({
 //
 // ---- Main ----
 //
-export const CardSlot = ({ card, selected, onSelect, size }: Props) => {
+export const CardSlot = ({ card, selected, onSelect, scale }: Props) => {
 	const { cardTheme, suitColorMode } = useTableStore();
 	const isDark = cardTheme === "dark";
 
@@ -52,9 +52,9 @@ export const CardSlot = ({ card, selected, onSelect, size }: Props) => {
 			className={`flex items-center justify-center rounded-md border shadow-sm transition-all
         ${selected ? styles.selected : styles.normal}`}
 			style={{
-				width: 35 * size,
-				height: 48 * size,
-				fontSize: `${16 * size}px`,
+				width: 35 * scale,
+				height: 48 * scale,
+				fontSize: `${16 * scale}px`,
 			}}
 		>
 			<View card={card} isDark={isDark} suitColorMode={suitColorMode} />

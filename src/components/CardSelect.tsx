@@ -1,4 +1,5 @@
 // import { useDeckCards } from "../hooks/useDeckCards";
+import { CARD_ASPECT_RATIO } from "../consts";
 import { useTableStore } from "../hooks/useTableStore";
 import type { Card, CardId, RealCard, RealCardId } from "../types";
 import { newUnknown } from "../utils/deck";
@@ -17,9 +18,9 @@ export const CardSelect = (props: CardSelectProps) => {
 	const SUITS = ["s", "h", "d", "c"] as const;
 	const suitGlyph = (s: string) => ({ h: "♥", d: "♦", c: "♣", s: "♠" })[s as "h" | "d" | "c" | "s"];
 
-	// 🔵 縦長カードの寸法（標準 44px × 62px）
+	// 🔵 縦長カードの寸法
 	const CARD_W = 44;
-	const CARD_H = Math.round(CARD_W * 1.4); // ≒ 62px
+	const CARD_H = Math.round(CARD_W * CARD_ASPECT_RATIO);
 
 	return (
 		<div className="flex gap-4 items-start">
