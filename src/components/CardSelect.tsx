@@ -1,7 +1,9 @@
 // import { useDeckCards } from "../hooks/useDeckCards";
+import { CARD_ASPECT_RATIO } from "../consts";
 import { useTableStore } from "../hooks/useTableStore";
-import type { CardId, RealCard, RealCardId } from "../types";
+import type { Card, CardId, RealCard, RealCardId } from "../types";
 import { newUnknown } from "../utils/deck";
+import { getSuitColorClass } from "../utils/style";
 
 type CardSelectProps = {
 	disableTaken: Set<CardId>; // 既に使用中の実カード
@@ -10,12 +12,15 @@ type CardSelectProps = {
 export const CardSelect = (props: CardSelectProps) => {
 	const { disableTaken } = props;
 
-	const { placeCard } = useTableStore();
+	const { placeCard, suitColorMode } = useTableStore();
 
 	const RANKS = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"] as const;
 	const SUITS = ["s", "h", "d", "c"] as const;
 	const suitGlyph = (s: string) => ({ h: "♥", d: "♦", c: "♣", s: "♠" })[s as "h" | "d" | "c" | "s"];
-	const suitCls = (s: string) => (s === "h" || s === "d" ? "text-red-600" : "text-gray-800");
+
+	// 🔵 縦長カードの寸法
+	const CARD_W = 44;
+	const CARD_H = Math.round(CARD_W * CARD_ASPECT_RATIO);
 
 	return (
 		<div className="flex gap-4 items-start">
@@ -34,34 +39,35 @@ export const CardSelect = (props: CardSelectProps) => {
 										const targetCard: RealCard = { kind: "real", id, rank: r, suit: s, assignedTo: null };
 										placeCard(targetCard);
 									}}
-									className={`w-14 h-10 border rounded-md font-mono text-sm flex items-center justify-center
+									className={`border rounded-md font-mono text-lg flex items-center justify-center
                     ${
 											disabled
 												? "bg-gray-200 text-gray-400 cursor-not-allowed"
 												: "bg-white hover:bg-gray-50 active:scale-[0.98]"
 										}`}
 									title={id}
+									style={{ width: CARD_W, height: CARD_H }}
 								>
-									<span className={suitCls(s)}>
+									<span className={getSuitColorClass({ rank: r, suit: s } as Card, false, suitColorMode)}>
 										{r}
 										{suitGlyph(s)}
 									</span>
 								</button>
 							);
 						})}
+						{/* 🔵 Unknown カードを同じ行の最後に統合 */}
+						{s === "c" && (
+							<button
+								type="button"
+								onClick={() => placeCard(newUnknown())}
+								className="border rounded-md bg-gray-100 hover:bg-gray-200 font-semibold flex items-center justify-center text-xs"
+								style={{ width: CARD_H, height: CARD_H }}
+							>
+								Unknown
+							</button>
+						)}
 					</div>
 				))}
-			</div>
-
-			<div className="flex flex-col gap-2">
-				<div className="text-xs text-gray-500">Unknown</div>
-				<button
-					type="button"
-					onClick={() => placeCard(newUnknown())}
-					className="w-20 h-10 border rounded-md bg-gray-100 hover:bg-gray-200 font-semibold"
-				>
-					X
-				</button>
 			</div>
 		</div>
 	);

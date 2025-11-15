@@ -1,7 +1,19 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { INITIAL_ALIVE, INITIAL_PLAYERS, MAX_PLAYERS, NEXT_STREET_MAP } from "../consts";
-import type { Action, Card, CardId, PlayerId, Seat, Slot, SlotIndex, Street, StudGameType } from "../types";
+import type {
+	Action,
+	Card,
+	CardId,
+	CardTheme,
+	PlayerId,
+	Seat,
+	Slot,
+	SlotIndex,
+	Street,
+	StudGameType,
+	SuitColorMode,
+} from "../types";
 import { StudGameType as StudGame } from "../types";
 import { assignCard, generateDeck, unassignCard } from "../utils/deck";
 import { shouldEndStreet } from "../utils/utils";
@@ -33,6 +45,13 @@ interface TableStore {
 	removeLastAction: (street: Street) => void;
 	clearStreetActions: (street: Street) => void;
 	setCurrentStreet: (street: Street) => void;
+
+	// -- カードの見た目設定 --
+	cardTheme: CardTheme;
+	suitColorMode: SuitColorMode;
+
+	setCardTheme: (theme: CardTheme) => void;
+	setCardSuitColor: (mode: SuitColorMode) => void;
 }
 
 // 各ストリートの初期アクション履歴
@@ -125,7 +144,8 @@ export const useTableStore = create<TableStore>()(
 			set((state) => ({
 				games: {
 					...state.games,
-					[type]: createInitialSlice(),
+					// playerCount は維持
+					[type]: { ...createInitialSlice(), playersCount: state.games[type].playersCount },
 				},
 			}));
 		},
@@ -256,6 +276,12 @@ export const useTableStore = create<TableStore>()(
 				},
 			});
 		},
+
+		// カードの見た目設定
+		cardTheme: "light",
+		suitColorMode: "two",
+		setCardTheme: (theme) => set({ cardTheme: theme }),
+		setCardSuitColor: (mode) => set({ suitColorMode: mode }),
 	})),
 	// { name: "stud-table-store" },
 	// ),
