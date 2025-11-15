@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useTableStore } from "../hooks/useTableStore";
-import type { PlayerId } from "../types";
+import { getPlayers, useTableStore } from "../hooks/useTableStore";
 import { PlayerSeat } from "./PlayerSeat";
 
 const TABLE_COLORS = {
@@ -19,12 +18,19 @@ const TABLE_COLORS = {
 } as const;
 
 // 🎛️ いじっていいパラメータ（席配置調整はここだけ）
-const BASE_TABLE = {
+const BASE_TABLE_PC = {
 	width: 900,
-	height: 520, // テーブルの縦サイズ
-	padding: 10, // outer → inner
-	seatRadiusX: 340, // 横方向の半径
-	seatRadiusY: 180, // 縦方向の半径
+	height: 520,
+	padding: 10,
+	seatRadiusX: 340,
+	seatRadiusY: 180,
+};
+const BASE_TABLE_MB = {
+	width: 420,
+	height: 310,
+	padding: 8,
+	seatRadiusX: 165,
+	seatRadiusY: 110,
 };
 
 export const PokerTable = () => {
@@ -33,19 +39,26 @@ export const PokerTable = () => {
 
 	const { seats, currentSlot, cardsById, playersCount, alive } = state;
 
-	const players = Array.from({ length: playersCount }, (_, i) => `P${i + 1}` as PlayerId);
+	const players = getPlayers(playersCount);
+
+	// スマホ判定
+	const isMobile = window.innerWidth < 768;
+	// PC / Mobile でテーブル基準値を切り替え
+	const BASE_TABLE = isMobile ? BASE_TABLE_MB : BASE_TABLE_PC;
 
 	// scale 計算用
 	const containerRef = useRef<HTMLDivElement>(null);
-	const [scale, setScale] = useState(1);
+	const [scale, setScale] = useState(2);
 
 	// scale の最小・最大値
 	const MIN_SCALE = 0.45;
-	const MAX_SCALE = 1;
+	const MAX_SCALE = isMobile ? 2 : 1;
 
 	useEffect(() => {
 		const resize = () => {
 			if (!containerRef.current) return;
+
+			// コンテナの幅を基準に scale を計算
 			const w = containerRef.current.offsetWidth;
 
 			let s = w / BASE_TABLE.width;
@@ -58,7 +71,7 @@ export const PokerTable = () => {
 		resize();
 		window.addEventListener("resize", resize);
 		return () => window.removeEventListener("resize", resize);
-	}, []);
+	}, [BASE_TABLE, MAX_SCALE]);
 
 	// 🎯 座標計算（見た目と完全一致）
 	const { cx, cy } = useMemo(
@@ -66,7 +79,7 @@ export const PokerTable = () => {
 			cx: (BASE_TABLE.width * scale) / 2,
 			cy: (BASE_TABLE.height * scale) / 2,
 		}),
-		[scale],
+		[scale, BASE_TABLE],
 	);
 
 	const pos = (i: number) => {
@@ -115,6 +128,7 @@ export const PokerTable = () => {
 								onPickSlot={(idx) => setCurrentSlot(pid, idx)}
 								alive={alive[pid]}
 								scale={scale}
+								isMobile={isMobile}
 							/>
 						</div>
 					);

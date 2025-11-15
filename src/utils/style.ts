@@ -13,7 +13,7 @@ export const getSuitColorClass = (card: Card | null, isDark: boolean, mode: Suit
 			case "s":
 				return isDark ? "text-white" : "text-black"; // ♠ black
 			case "h":
-				return "text-red-500"; // ♥ red
+				return isDark ? "text-red-400" : "text-red-600"; // ♥ red
 			case "d":
 				return "text-blue-500"; // ♦ blue
 			case "c":

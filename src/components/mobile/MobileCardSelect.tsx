@@ -1,12 +1,12 @@
 import { useMemo } from "react";
-import { CARD_ASPECT_RATIO } from "../consts";
-import { useTableStore } from "../hooks/useTableStore";
-import type { Card, RealCard, RealCardId } from "../types";
-import { newUnknown, takenRealIds } from "../utils/deck";
-import { getSuitColorClass } from "../utils/style";
-import { suitGlyph } from "../utils/utils";
+import { CARD_ASPECT_RATIO } from "../../consts";
+import { useTableStore } from "../../hooks/useTableStore";
+import type { Card, RealCard, RealCardId } from "../../types";
+import { newUnknown, takenRealIds } from "../../utils/deck";
+import { getSuitColorClass } from "../../utils/style";
+import { suitGlyph } from "../../utils/utils";
 
-export const CardSelect = () => {
+export const MobileCardSelect = () => {
 	const { placeCard, suitColorMode, games, gameType } = useTableStore();
 	const state = games[gameType];
 
@@ -16,14 +16,14 @@ export const CardSelect = () => {
 	const SUITS = ["s", "h", "d", "c"] as const;
 
 	// 縦長カードの寸法
-	const CARD_W = 44;
+	const CARD_W = 22;
 	const CARD_H = Math.round(CARD_W * CARD_ASPECT_RATIO);
 
 	return (
 		<div className="flex gap-4 items-start">
-			<div className="grid grid-rows-4 gap-2">
+			<div className="grid grid-rows-5 gap-1.5">
 				{SUITS.map((s) => (
-					<div key={s} className="flex flex-row gap-2">
+					<div key={s} className="flex flex-row gap-1.5">
 						{RANKS.map((r) => {
 							const id = `${r}${s}` as RealCardId;
 							const disabled = disableSet.has(id);
@@ -36,8 +36,8 @@ export const CardSelect = () => {
 										const targetCard: RealCard = { kind: "real", id, rank: r, suit: s, assignedTo: null };
 										placeCard(targetCard);
 									}}
-									className={`border rounded-md font-mono text-lg flex items-center justify-center
-                    ${
+									className={`border rounded-md font-mono text-sm flex items-center justify-center
+										${
 											disabled
 												? "bg-gray-200 text-gray-400 cursor-not-allowed"
 												: "bg-white hover:bg-gray-50 active:scale-[0.98]"
@@ -52,19 +52,18 @@ export const CardSelect = () => {
 								</button>
 							);
 						})}
-						{/* Unknown カードを同じ行の最後に統合 */}
-						{s === "c" && (
-							<button
-								type="button"
-								onClick={() => placeCard(newUnknown())}
-								className="border rounded-md bg-gray-100 hover:bg-gray-200 font-semibold flex items-center justify-center text-xs"
-								style={{ width: CARD_H, height: CARD_H }}
-							>
-								Unknown
-							</button>
-						)}
 					</div>
 				))}
+				{/* Unknown */}
+				<div className="flex justify-end">
+					<button
+						type="button"
+						onClick={() => placeCard(newUnknown())}
+						className="border rounded-md bg-gray-100 hover:bg-gray-200 font-semibold flex items-center justify-center text-xs px-2"
+					>
+						Unknown
+					</button>
+				</div>
 			</div>
 		</div>
 	);

@@ -1,4 +1,4 @@
-import { ACTIONS_3RD, ACTIONS_LATER } from "../consts";
+import { ACTIONS_3RD, ACTIONS_LATER, STREET_TO_VISIBLE_CARD_COUNT } from "../consts";
 import { useTableStore } from "../hooks/useTableStore";
 import type { ActionType, Card, CardId, PlayerId, Rank } from "../types";
 import { getThirdStreetUpCard } from "../utils/getFirstActor";
@@ -15,14 +15,6 @@ type Props = {
 	bringInRank: Rank | null;
 	alive: boolean;
 	isFirstActor: boolean;
-};
-
-const STREET_TO_VISIBLE_CARD_COUNT = {
-	"3rd": 3, // down2 + up1
-	"4th": 4,
-	"5th": 5,
-	"6th": 6,
-	"7th": 7,
 };
 
 export const PlayerRow = (props: Props) => {
