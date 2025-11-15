@@ -80,6 +80,3 @@ export const SUIT_VALUE_RAZZ: Record<Suit, number> = {
 	h: 1,
 	s: 0, // spade が一番弱い想定
 };
-
-export const CARD_THEME_VALUES = ["white", "dark"] as const;
-export const SUIT_COLOR_MODE_VALUES = ["two", "four"] as const;

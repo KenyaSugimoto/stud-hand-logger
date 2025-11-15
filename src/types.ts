@@ -73,5 +73,8 @@ export interface Action {
 	type: ActionType;
 }
 
-export type CardTheme = "white" | "dark";
-export type SuitColorMode = "two" | "four";
+export const CARD_THEME_VALUES = ["white", "dark"] as const;
+export type CardTheme = (typeof CARD_THEME_VALUES)[number];
+
+export const SUIT_COLOR_MODE_VALUES = ["two", "four"] as const;
+export type SuitColorMode = (typeof SUIT_COLOR_MODE_VALUES)[number];

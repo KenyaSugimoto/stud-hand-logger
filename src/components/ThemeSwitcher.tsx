@@ -1,5 +1,5 @@
-import { CARD_THEME_VALUES } from "../consts";
 import { useTableStore } from "../hooks/useTableStore";
+import { CARD_THEME_VALUES } from "../types";
 
 export const ThemeSwitcher = () => {
 	const { cardTheme, suitColorMode, setCardTheme, setCardSuitColor } = useTableStore();

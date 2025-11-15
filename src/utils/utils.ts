@@ -1,4 +1,4 @@
-import { type Action, type ActionType, type PlayerId } from "../types";
+import type { Action, ActionType, PlayerId } from "../types";
 
 // ストリート終了を判定する関数
 export const shouldEndStreet = (streetActions: Action[], alivePlayers: PlayerId[]): boolean => {
