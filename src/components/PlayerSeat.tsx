@@ -29,7 +29,7 @@ export const PlayerSeat = (props: Props) => {
 
 	return (
 		<div
-			className={`flex flex-col items-center gap-1 p-2 rounded-xl ${focused ? "ring-2 ring-white shadow-[0_0_10px_white]" : ""} ${disabledStyle}`}
+			className={`flex flex-col items-center gap-1 p-2 rounded-xl bg-white/20 ${focused ? "ring-2 ring-white shadow-[0_0_10px_white]" : ""} ${disabledStyle}`}
 			style={{ transform: `scale(${scale})`, transformOrigin: "center" }}
 		>
 			<div className="text-xs text-gray-100 mb-1">{playerId}</div>
