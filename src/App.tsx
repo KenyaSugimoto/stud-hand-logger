@@ -21,7 +21,7 @@ export default function App() {
 		// 📱 モバイル：テーブルなし・入力ビューのみ
 		return (
 			<div className="w-full min-h-screen flex flex-col bg-white">
-				<div className="w-full flex-shrink-0 flex items-center pt-2 border-b border-gray-200">
+				<div className="w-full shrink-0 flex items-center pt-2 border-b border-gray-200">
 					<GameTypeSelect />
 				</div>
 
@@ -37,10 +37,6 @@ export default function App() {
 				<div className="flex-1 overflow-y-auto">
 					<MobileInputView />
 				</div>
-
-				<div className="border-t border-gray-200 p-3 mb-5">
-					<SettingsSection />
-				</div>
 			</div>
 		);
 	}
@@ -49,7 +45,7 @@ export default function App() {
 	return (
 		<div className="w-full h-screen flex flex-col overflow-hidden bg-white">
 			{/* 上部 tabs */}
-			<div className="w-full flex-shrink-0 flex items-center pt-2 border-b border-gray-200">
+			<div className="w-full shrink-0 flex items-center pt-2 border-b border-gray-200">
 				<GameTypeSelect />
 			</div>
 
@@ -67,7 +63,7 @@ export default function App() {
 					className="
 						min-w-[800px]
 						max-w-[1200px]
-						flex-shrink-0
+						shrink-0
 						overflow-y-auto
 						overflow-x-hidden
 						border-l border-gray-300

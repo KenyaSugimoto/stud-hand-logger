@@ -1,5 +1,3 @@
-// utils/canActMobile.ts
-
 import type { TableState } from "../hooks/useTableStore";
 import type { ActionType, PlayerId, Rank, Street } from "../types";
 import { getThirdStreetUpCard } from "./getFirstActor";

@@ -9,14 +9,13 @@ import type {
 	PlayerId,
 	Seat,
 	Slot,
-	SlotIndex,
 	Street,
 	StudGameType,
 	SuitColorMode,
 } from "../types";
 import { StudGameType as StudGame } from "../types";
 import { assignCard, generateDeck, unassignCard } from "../utils/deck";
-import { shouldEndStreet } from "../utils/utils";
+import { shouldEndStreet, updateCurrentSlot } from "../utils/utils";
 
 export interface TableState {
 	seats: Record<PlayerId, Seat>; // 各プレイヤーの7枠
@@ -36,7 +35,7 @@ interface TableStore {
 
 	// --- 操作 ---
 	setGameType: (type: StudGameType) => void;
-	setCurrentSlot: (playerId: PlayerId, slotIndex: SlotIndex) => void;
+	setCurrentSlot: (slot: Slot | null) => void;
 	placeCard: (card: Card) => void;
 	removeCard: (cardId: CardId) => void;
 	resetGame: (type: StudGameType) => void;
@@ -45,6 +44,7 @@ interface TableStore {
 	removeLastAction: (street: Street) => void;
 	clearStreetActions: (street: Street) => void;
 	setCurrentStreet: (street: Street) => void;
+	updateCurrentSlot: () => void;
 
 	// -- カードの見た目設定 --
 	cardTheme: CardTheme;
@@ -100,12 +100,25 @@ export const useTableStore = create<TableStore>()(
 		setGameType: (type) => set({ gameType: type }),
 
 		// 現在の操作対象を設定
-		setCurrentSlot: (playerId, slotIndex) => {
+		setCurrentSlot: (slot) => {
 			const { gameType, games } = get();
 			const currentGame = games[gameType];
 
+			// slot が null の場合はクリア
+			if (!slot) {
+				return set({
+					games: {
+						...games,
+						[gameType]: {
+							...currentGame,
+							currentSlot: null,
+						},
+					},
+				});
+			}
+
+			const { playerId, slotIndex } = slot;
 			const newSeats = [...currentGame.seats[playerId]];
-			newSeats[slotIndex] = null; // 既存のカードをクリア
 
 			set({
 				games: {
@@ -121,7 +134,7 @@ export const useTableStore = create<TableStore>()(
 
 		// カード配置処理
 		placeCard: (card) => {
-			const { gameType, games } = get();
+			const { gameType, games, setCurrentSlot } = get();
 			const currentGame = games[gameType];
 
 			if (!currentGame.currentSlot) return;
@@ -138,15 +151,12 @@ export const useTableStore = create<TableStore>()(
 
 			updated = assignCard(updated, card.id, currentGame.currentSlot);
 
-			const nextIndex = Math.min(currentGame.currentSlot.slotIndex + 1, 6) as SlotIndex;
-			updated = {
-				...updated,
-				currentSlot: { ...currentGame.currentSlot, slotIndex: nextIndex },
-			};
-
 			set({
 				games: { ...games, [gameType]: updated },
 			});
+
+			// currentSlot 更新
+			updateCurrentSlot(updated, setCurrentSlot);
 		},
 
 		removeCard: (cardId) => {

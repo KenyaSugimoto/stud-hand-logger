@@ -1,4 +1,6 @@
-import type { Action, ActionType, PlayerId, Suit } from "../types";
+import { NEXT_STREET_MAP, STREET_TO_VISIBLE_CARD_COUNT } from "../consts";
+import type { TableState } from "../hooks/useTableStore";
+import type { Action, ActionType, PlayerId, Slot, SlotIndex, Street, Suit } from "../types";
 
 // ストリート終了を判定する関数
 export const shouldEndStreet = (streetActions: Action[], alivePlayers: PlayerId[]): boolean => {
@@ -52,4 +54,54 @@ export const shouldEndStreet = (streetActions: Action[], alivePlayers: PlayerId[
 	return true;
 };
 
+// スート記号を返す関数
 export const suitGlyph = (s: Suit) => ({ h: "♥", d: "♦", c: "♣", s: "♠" })[s];
+
+// TODO: ↓ ここより下の関数 単体テスト未実装
+
+// 特定ストリートで最初の空スロットを返す共通関数
+const findEmptySlotForStreet = (state: TableState, street: Street): Slot | null => {
+	const { seats, playersCount, alive } = state;
+
+	const visibleCount = STREET_TO_VISIBLE_CARD_COUNT[street];
+
+	for (let i = 0; i < playersCount; i++) {
+		const pid = `P${i + 1}` as PlayerId;
+
+		if (!alive[pid]) continue; // fold したプレイヤーは対象外
+
+		const seat = seats[pid];
+
+		for (let slotIndex = 0; slotIndex < visibleCount; slotIndex++) {
+			if (seat[slotIndex] === null) {
+				return { playerId: pid, slotIndex: slotIndex as SlotIndex };
+			}
+		}
+	}
+
+	return null;
+};
+
+// 次に設定するCurrentSlotを取得する関数
+const getNextCurrentSlot = (state: TableState): Slot | null => {
+	const { currentStreet } = state;
+
+	// 1. 現ストリートで探す
+	const found = findEmptySlotForStreet(state, currentStreet);
+	if (found) return found;
+
+	// 2. 次ストリートで探す
+	const nextStreet = NEXT_STREET_MAP[currentStreet];
+	if (nextStreet) {
+		return findEmptySlotForStreet(state, nextStreet);
+	}
+
+	// 3. 次のストリートが無ければ null を返す
+	return null;
+};
+
+export const updateCurrentSlot = (newState: TableState, setCurrentSlot: (slot: Slot | null) => void) => {
+	const nextSlot = getNextCurrentSlot(newState);
+
+	setCurrentSlot(nextSlot);
+};

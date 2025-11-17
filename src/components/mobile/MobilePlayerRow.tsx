@@ -13,19 +13,17 @@ type Props = {
 	currentSlot: Slot | null;
 	onPickSlot: (idx: SlotIndex) => void;
 	alive: boolean;
+	bringInCandidate: PlayerId | null;
 };
 
 export const MobilePlayerRow = (props: Props) => {
-	const { street, playerId, seatIds, cardsById, currentSlot, onPickSlot, alive } = props;
+	const { street, playerId, seatIds, cardsById, currentSlot, onPickSlot, alive, bringInCandidate } = props;
 	const { games, gameType } = useTableStore();
 	const state = games[gameType];
-	const { bringInPlayer, bringInCandidate } = state;
+	const { bringInPlayer } = state;
 
 	// bring-in 情報
 	const is3rd = street === "3rd";
-
-	const isBringInPlayer = bringInPlayer === playerId;
-	const isBringInCandidate = bringInCandidate === playerId;
 
 	// first actor
 	const isFirstActor = getFirstActor(state, gameType) === playerId;
@@ -54,6 +52,20 @@ export const MobilePlayerRow = (props: Props) => {
 
 	const historyText = history.length > 0 ? history.join(" / ") : "";
 
+	const FirstActorMark = () => {
+		const isBringInCandidate = bringInCandidate === playerId;
+		if (is3rd && isBringInCandidate) {
+			return <span className="text-blue-500 font-bold">↓</span>;
+		}
+
+		const isBringInPlayer = bringInPlayer === playerId;
+		if (is3rd && isBringInPlayer) {
+			return <span className="text-orange-500 font-bold">↓</span>;
+		}
+
+		return isFirstActor ? <span className="text-orange-500 font-bold">↓</span> : <span>$ </span>;
+	};
+
 	return (
 		<div
 			className={`flex items-center gap-2 py-1 px-1 rounded-md bg-white border border-gray-200 ${
@@ -61,17 +73,15 @@ export const MobilePlayerRow = (props: Props) => {
 			}`}
 		>
 			{/* Player */}
-			<div className="w-6 text-[11px] font-semibold text-gray-700">{playerId}</div>
+			<div className="w-2 text-[11px] font-semibold text-gray-700">{playerId}</div>
 
 			{/* bring-in / first actor */}
-			<div className="w-3 text-center text-[12px]">
-				{isBringInCandidate && <span className="text-blue-500 font-bold">↓</span>}
-				{isBringInPlayer && is3rd && <span className="text-orange-500 font-bold">↓</span>}
-				{isFirstActor && !is3rd && <span className="text-orange-500 font-bold">↓</span>}
+			<div className="w-2 text-center text-[16px] font-mono">
+				<FirstActorMark />
 			</div>
 
 			{/* カード（12 / 3456 / 7） */}
-			<div className="flex-1 flex items-center gap-1">
+			<div className="flex items-center gap-1">
 				{/* down2 */}
 				{down2.map((id, idx) => (
 					<CardSlot
@@ -122,10 +132,10 @@ export const MobilePlayerRow = (props: Props) => {
 			</div>
 
 			{/* 履歴 */}
-			<div className="text-[10px] text-black font-semibold font-mono w-14 text-left">{historyText}</div>
+			<div className="w-64 text-[10px] text-black font-semibold font-mono text-left">{historyText}</div>
 
 			{/* アクション */}
-			<MobileActionButtons street={street} playerId={playerId} />
+			<MobileActionButtons street={street} playerId={playerId} isBringInCandidate={bringInCandidate === playerId} />
 		</div>
 	);
 };

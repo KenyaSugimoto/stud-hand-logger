@@ -1,13 +1,8 @@
-import type { TableState } from "../../hooks/useTableStore"; // or export TableState from hook
 import { getPlayers, useTableStore } from "../../hooks/useTableStore";
-import type { PlayerId, Street } from "../../types";
-import { isAliveAtStartStreet } from "../../utils/getFirstActor";
+import type { PlayerId } from "../../types";
+import { getBringInCandidate, isAliveAtStartStreet } from "../../utils/getFirstActor";
+import { ActionUndoClearButtons } from "../ActionUndoClearButtons";
 import { MobilePlayerRow } from "./MobilePlayerRow";
-
-type Props = {
-	street: Street;
-	state: TableState;
-};
 
 const STYLE = {
 	STUD_HI: {
@@ -24,13 +19,18 @@ const STYLE = {
 	},
 };
 
-export const MobileStreetBlock = ({ street, state }: Props) => {
-	const { setCurrentSlot, gameType } = useTableStore();
+export const MobileStreetBlock = () => {
+	const { setCurrentSlot, gameType, games } = useTableStore();
+	const state = games[gameType];
+	const { currentStreet, bringInPlayer } = state;
 
 	const players: PlayerId[] = getPlayers(state.playersCount);
 
-	// 🔍 各ストリート開始時点で生存しているプレイヤーのみ
-	const visiblePlayers = players.filter((pid) => isAliveAtStartStreet(state, pid, street));
+	// ストリート開始時点で生存しているプレイヤーのみ抽出
+	const visiblePlayers = players.filter((pid) => isAliveAtStartStreet(state, pid, currentStreet));
+
+	// bring-in 候補（bring-inのプレイヤーが未確定 かつ 3rdの時だけ計算）
+	const bringInCandidate = !bringInPlayer && currentStreet === "3rd" ? getBringInCandidate(gameType, state) : null;
 
 	const styles = STYLE[gameType];
 
@@ -39,23 +39,30 @@ export const MobileStreetBlock = ({ street, state }: Props) => {
 			<summary
 				className={`flex items-center justify-between px-3 py-2 cursor-pointer select-none ${styles.summaryBg} rounded-t-lg`}
 			>
-				<span className="font-semibold text-sm">{street} Actions</span>
+				<span className="font-semibold text-sm">{currentStreet} Actions</span>
 				<span className="text-xs text-white">{visiblePlayers.length} players</span>
 			</summary>
 
-			<div className="px-2 pb-2 flex flex-col gap-1.5 pt-2">
+			{/* 各プレイヤーのアクション入力列 */}
+			<div className="px-2 flex flex-col gap-1.5 pt-2">
 				{visiblePlayers.map((pid) => (
 					<MobilePlayerRow
 						key={pid}
-						street={street}
+						street={currentStreet}
 						playerId={pid}
 						seatIds={state.seats[pid]}
 						cardsById={state.cardsById}
 						currentSlot={state.currentSlot}
-						onPickSlot={(slotIndex) => setCurrentSlot(pid, slotIndex)}
+						onPickSlot={(slotIndex) => setCurrentSlot({ playerId: pid, slotIndex })}
 						alive={state.alive[pid]}
+						bringInCandidate={bringInCandidate}
 					/>
 				))}
+			</div>
+
+			{/* undo, clear buttons */}
+			<div className="flex justify-end p-1">
+				<ActionUndoClearButtons />
 			</div>
 		</details>
 	);

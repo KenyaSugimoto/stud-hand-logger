@@ -1,14 +1,13 @@
+import { RANKS, SUITS } from "../consts";
 import type { TableState } from "../hooks/useTableStore";
-import type { CardId, RealCard, RealCardId, Slot, Suit, UnknownCard } from "../types";
+import type { CardId, RealCard, RealCardId, Slot, UnknownCard } from "../types";
 
 // TODO: utils.tsにまとめる
 
 export function generateDeck(): Record<RealCardId, RealCard> {
-	const ranks = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"] as const;
-	const suits: Suit[] = ["s", "h", "d", "c"];
 	const out = {} as Record<RealCardId, RealCard>;
-	for (const s of suits)
-		for (const r of ranks) {
+	for (const s of SUITS)
+		for (const r of RANKS) {
 			const id = `${r}${s}` as RealCardId;
 			out[id] = { kind: "real", id, rank: r, suit: s, assignedTo: null };
 		}
