@@ -1,8 +1,8 @@
 import { describe, expect, test } from "vitest";
-import type { TableState } from "../hooks/useTableStore";
-import type { Action, CardId, SlotIndex } from "../types";
-import { generateDeck } from "../utils/deck";
-import { canActMobile } from "./mobile";
+import type { TableState } from "../../hooks/useTableStore";
+import type { Action, CardId, SlotIndex } from "../../types";
+import { generateDeck } from "../../utils/deck";
+import { canActMobile } from "../mobile";
 
 // ---------------------------
 // テスト用共通 state

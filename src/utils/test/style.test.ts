@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
-import type { Rank, RealCard, Suit, UnknownCard } from "../types";
-import { getStyleByCardTheme, getSuitColorClass } from "./style";
+import type { Rank, RealCard, Suit, UnknownCard } from "../../types";
+import { getStyleByCardTheme, getSuitColorClass } from "../style";
 
 const makeCard = (suit: Suit, rank: Exclude<Rank, "X"> = "A"): RealCard =>
 	({

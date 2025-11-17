@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
-import type { Action, ActionType, PlayerId } from "../types";
-import { shouldEndStreet, suitGlyph } from "./utils";
+import type { Action, ActionType, PlayerId } from "../../types";
+import { shouldEndStreet, suitGlyph } from "../utils";
 
 const A = (playerId: PlayerId, type: ActionType): Action => ({ playerId, type });
 

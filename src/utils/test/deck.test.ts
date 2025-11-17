@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
-import type { TableState } from "../hooks/useTableStore";
-import { assignCard, generateDeck, newUnknown, takenRealIds, unassignCard } from "./deck";
+import type { TableState } from "../../hooks/useTableStore";
+import { assignCard, generateDeck, newUnknown, takenRealIds, unassignCard } from "../deck";
 
 //
 // ---- テスト用の最小 TableState を作るヘルパー ----
