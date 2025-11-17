@@ -8,7 +8,7 @@ import {
 	getFirstActorForStreet,
 	getThirdStreetUpCard,
 	isAliveAtStartStreet,
-} from "./getFirstActor"; // ← パスは調整（例: "../utils/getFirstActor"）
+} from "./getFirstActor";
 
 // ---------------------------------------------------------
 // テスト用の共通ヘルパー
