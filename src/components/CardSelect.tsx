@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { CARD_ASPECT_RATIO } from "../consts";
+import { CARD_ASPECT_RATIO, RANKS, SUITS } from "../consts";
 import { useTableStore } from "../hooks/useTableStore";
 import type { Card, RealCard, RealCardId } from "../types";
 import { newUnknown, takenRealIds } from "../utils/deck";
@@ -11,9 +11,6 @@ export const CardSelect = () => {
 	const state = games[gameType];
 
 	const disableSet = useMemo(() => takenRealIds(state), [state]);
-
-	const RANKS = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"] as const;
-	const SUITS = ["s", "h", "d", "c"] as const;
 
 	// 縦長カードの寸法
 	const CARD_W = 44;

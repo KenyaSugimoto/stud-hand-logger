@@ -19,6 +19,10 @@ export const INITIAL_ALIVE: Record<PlayerId, boolean> = Object.fromEntries(
 	Array.from({ length: MAX_PLAYERS }, (_, i) => [`P${i + 1}` as PlayerId, true]),
 );
 
+// カードのランク・スート一覧
+export const RANKS = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"] as const;
+export const SUITS = ["s", "h", "d", "c"] as const;
+
 // カードランク・スートの順序付け
 export const RANK_STUD_HI: Rank[] = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"];
 export const RANK_RAZZ: Rank[] = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K"];
@@ -95,10 +99,25 @@ export const GAME_TYPE_LABELS: Record<StudGameType, string> = {
 	STUD_8: "Stud 8",
 };
 
-export const STREET_TO_VISIBLE_CARD_COUNT = {
+export const STREET_TO_VISIBLE_CARD_COUNT: Record<Street, number> = {
 	"3rd": 3, // down2 + up1
 	"4th": 4,
 	"5th": 5,
 	"6th": 6,
 	"7th": 7,
+};
+
+export const GAME_COLORS = {
+	STUD_HI: {
+		accent: "bg-blue-600 text-white ring-2 ring-blue-300 shadow-[0_0_10px_rgba(96,165,250,0.7)]",
+		normal: "bg-blue-300 text-black hover:bg-blue-400 shadow-inner",
+	},
+	RAZZ: {
+		accent: "bg-orange-600 text-white ring-2 ring-orange-300 shadow-[0_0_10px_rgba(251,146,60,0.7)]",
+		normal: "bg-orange-300 text-black hover:bg-orange-400 shadow-inner",
+	},
+	STUD_8: {
+		accent: "bg-green-600 text-white ring-2 ring-lime-300 shadow-[0_0_10px_rgba(190,242,100,0.7)]",
+		normal: "bg-green-300 text-black hover:bg-green-400 shadow-inner",
+	},
 };

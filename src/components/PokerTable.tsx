@@ -113,7 +113,7 @@ export const PokerTable = () => {
 								cardsById={cardsById}
 								currentSlot={currentSlot}
 								focused={currentSlot?.playerId === pid}
-								onPickSlot={(idx) => setCurrentSlot(pid, idx)}
+								onPickSlot={(idx) => setCurrentSlot({ playerId: pid, slotIndex: idx })}
 								alive={alive[pid]}
 								scale={scale}
 							/>

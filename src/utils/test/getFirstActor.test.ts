@@ -1,14 +1,22 @@
 import { describe, expect, test } from "vitest";
-import type { TableState } from "../hooks/useTableStore";
-import { type Action, type Card, type CardId, type PlayerId, type Seat, type SlotIndex, StudGameType } from "../types";
-import { generateDeck } from "./deck";
+import type { TableState } from "../../hooks/useTableStore";
+import {
+	type Action,
+	type Card,
+	type CardId,
+	type PlayerId,
+	type Seat,
+	type SlotIndex,
+	StudGameType,
+} from "../../types";
+import { generateDeck } from "../deck";
 import {
 	getBringInCandidate,
 	getFirstActor,
 	getFirstActorForStreet,
 	getThirdStreetUpCard,
 	isAliveAtStartStreet,
-} from "./getFirstActor";
+} from "../getFirstActor";
 
 // ---------------------------------------------------------
 // テスト用の共通ヘルパー

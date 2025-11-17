@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { GAME_TYPE_LABELS, STREETS } from "../consts";
+import { GAME_COLORS, GAME_TYPE_LABELS, STREETS } from "../consts";
 import { getPlayers, useTableStore } from "../hooks/useTableStore";
 import type { Action, Card, CardId, PlayerId, Seat, Street } from "../types";
 import { getFirstActorForStreet } from "../utils/getFirstActor";
@@ -104,7 +104,7 @@ export const ActionLogPanel = () => {
 		const streetActions = actions[street];
 		if (!streetActions.length) return null;
 
-		const lines: string[] = [`${GAME_TYPE_LABELS[gameType]}`];
+		const lines: string[] = [];
 		lines.push(`< ${street} >`);
 
 		// この street 時点で alive のプレイヤーだけを出す
@@ -135,9 +135,12 @@ export const ActionLogPanel = () => {
 	};
 
 	/** 全ストリート分をまとめる */
-	const fullText = STREETS.map((st) => buildStreetLog(st))
-		.filter(Boolean)
-		.join("\n\n");
+	const gameTypeLabel = GAME_TYPE_LABELS[gameType];
+	const fullText =
+		`${gameTypeLabel}\n` +
+		STREETS.map((st) => buildStreetLog(st))
+			.filter(Boolean)
+			.join("\n\n");
 
 	/** クリップボードコピー */
 	const onCopy = async () => {
@@ -149,21 +152,26 @@ export const ActionLogPanel = () => {
 		}
 	};
 
+	const color = GAME_COLORS[gameType];
+
 	return (
-		<div className="border rounded-lg p-4 bg-gray-50">
+		<div className="p-1 bg-gray-50">
 			<div className="flex justify-between items-center mb-2">
 				<h3 className="font-semibold text-gray-700">Action Log</h3>
 
 				<button
 					type="button"
 					onClick={onCopy}
-					className="px-3 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-700"
+					disabled={!fullText}
+					className={`px-3 py-1 text-sm rounded ${color.normal} disabled:bg-gray-300 disabled:cursor-not-allowed`}
 				>
 					Copy
 				</button>
 			</div>
 
-			<pre className="text-sm whitespace-pre-wrap leading-6">{fullText}</pre>
+			<pre className="text-sm whitespace-pre-wrap leading-6 bg-white border rounded-sm p-1">
+				{fullText ? fullText : "\n\n\n\n\n\n\n\n"}
+			</pre>
 		</div>
 	);
 };

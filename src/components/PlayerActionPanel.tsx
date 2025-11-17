@@ -1,6 +1,7 @@
 import { useTableStore } from "../hooks/useTableStore";
 import type { Action, ActionType, Card, CardId, PlayerId, Rank } from "../types";
 import { getBringInCandidate, getFirstActor, getThirdStreetUpCard } from "../utils/getFirstActor";
+import { ActionUndoClearButtons } from "./ActionUndoClearButtons";
 import { PlayerRow } from "./PlayerRow";
 
 type Props = {
@@ -14,7 +15,7 @@ type Props = {
 export const PlayerActionPanel = (props: Props) => {
 	const { players, seats, cardsById, currentStreetActions, onAction } = props;
 
-	const { games, gameType, removeLastAction, clearStreetActions } = useTableStore();
+	const { games, gameType } = useTableStore();
 	const currentGame = games[gameType];
 
 	const { alive, currentStreet, bringInPlayer } = currentGame;
@@ -60,20 +61,7 @@ export const PlayerActionPanel = (props: Props) => {
 
 			{/* アクション履歴操作ボタン */}
 			<div className="flex gap-2 mt-3 justify-end">
-				<button
-					type="button"
-					onClick={() => removeLastAction(currentStreet)}
-					className="text-xs px-2 py-1 bg-gray-700 rounded hover:bg-yellow-600 transition-colors text-white"
-				>
-					Undo
-				</button>
-				<button
-					type="button"
-					onClick={() => clearStreetActions(currentStreet)}
-					className="text-xs px-2 py-1 bg-gray-700 rounded hover:bg-red-600 transition-colors text-white"
-				>
-					Clear
-				</button>
+				<ActionUndoClearButtons />
 			</div>
 		</div>
 	);
