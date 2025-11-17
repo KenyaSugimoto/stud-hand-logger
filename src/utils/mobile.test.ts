@@ -61,7 +61,7 @@ describe("canActMobile", () => {
 		expect(canActMobile(state, "4th", "P1", "bri")).toBe(false);
 	});
 
-	test("bri: bringInPlayer 本人は持続不可", () => {
+	test("bri: bringInPlayer 本人は実行不可", () => {
 		const state = makeState();
 		state.bringInPlayer = "P1";
 
