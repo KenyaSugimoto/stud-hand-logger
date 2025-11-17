@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import type { TableState } from "../hooks/useTableStore";
 import { type Action, type Card, type CardId, type PlayerId, type Seat, type SlotIndex, StudGameType } from "../types";
-import { generateDeck } from "./deck"; // ← これもパス要調整
+import { generateDeck } from "./deck";
 import {
 	getBringInCandidate,
 	getFirstActor,
