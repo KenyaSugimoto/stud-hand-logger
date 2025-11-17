@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "format": "npx @biomejs/biome format --write ./src",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test-unit": "vitest run",
+    "test-unit-ui": "vitest --ui"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.17",
