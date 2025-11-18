@@ -19,8 +19,12 @@ export const MobileCardSelect = () => {
 	const [cardW, setCardW] = useState(25);
 	const cardH = Math.round(cardW * CARD_ASPECT_RATIO);
 
+	// カードサイズ計算の最小・最大値
 	const MIN_CARD_W = 20;
 	const MAX_CARD_W = 40;
+
+	// カード幅に対するフォントサイズ比率
+	const FONT_SIZE_RATIO = 0.55;
 
 	useEffect(() => {
 		const calc = () => {
@@ -31,7 +35,7 @@ export const MobileCardSelect = () => {
 			// SUITS の 1 行の横幅計算
 			// gap: 1.5 = 約 6px (Tailwind)
 			const GAP = 6;
-			const padding = 0;
+			const padding = 8;
 
 			const totalGap = GAP * (RANKS.length - 1);
 			const available = width - padding - totalGap;
@@ -71,9 +75,9 @@ export const MobileCardSelect = () => {
 									}
 									className={`
 										border rounded-md font-mono text-sm flex items-center justify-center
-										${disabled ? "bg-gray-200 text-gray-400" : "bg-white active:scale-95"}
+										${disabled ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "bg-white hover:bg-gray-50 active:scale-95"}
 									`}
-									style={{ width: cardW, height: cardH, fontSize: cardW * 0.55 }}
+									style={{ width: cardW, height: cardH, fontSize: cardW * FONT_SIZE_RATIO }}
 								>
 									<span className={getSuitColorClass({ rank: r, suit: s } as Card, false, suitColorMode)}>
 										{r}
