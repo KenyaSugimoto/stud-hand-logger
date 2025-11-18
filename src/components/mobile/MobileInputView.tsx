@@ -46,7 +46,7 @@ export const MobileInputView = () => {
 
 			{/* カード選択パネル */}
 			<div className="">
-				<MobileCardSelectPanel open={slide.open} setOpen={slide.setOpen} />
+				<MobileCardSelectPanel open={slide.open} toggle={slide.toggle} />
 			</div>
 		</div>
 	);
