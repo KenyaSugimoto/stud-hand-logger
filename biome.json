@@ -17,10 +17,13 @@
 		"enabled": true,
 		"rules": {
 			"recommended": true,
+			"complexity": {
+				"useLiteralKeys": "off"
+			},
 			"correctness": {
-        "noUnusedVariables": "warn",
-        "noUnusedFunctionParameters": "warn"
-      }
+				"noUnusedVariables": "warn",
+				"noUnusedFunctionParameters": "warn"
+			}
 		}
 	},
 	"javascript": {
