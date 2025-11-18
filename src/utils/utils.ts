@@ -57,8 +57,6 @@ export const shouldEndStreet = (streetActions: Action[], alivePlayers: PlayerId[
 // スート記号を返す関数
 export const suitGlyph = (s: Suit) => ({ h: "♥", d: "♦", c: "♣", s: "♠" })[s];
 
-// TODO: ↓ ここより下の関数 単体テスト未実装
-
 // 特定ストリートで最初の空スロットを返す共通関数
 export const findEmptySlotForStreet = (state: TableState, street: Street): Slot | null => {
 	const { seats, playersCount, alive } = state;
