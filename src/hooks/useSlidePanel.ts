@@ -7,5 +7,5 @@ export const useSlidePanel = () => {
 	const close = () => setOpen(false);
 	const openPanel = () => setOpen(true);
 
-	return { open, toggle, close, openPanel };
+	return { open, toggle, close, openPanel, setOpen };
 };
