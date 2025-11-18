@@ -14,8 +14,10 @@ export const MobileInputView = () => {
 
 	const slide = useSlidePanel();
 
+	const PANEL_PADDING = 335;
+
 	return (
-		<div className={`relative px-2 flex flex-col gap-2 ${slide.open ? "pb-[280px]" : "pb-10"}`}>
+		<div className={`relative px-2 flex flex-col gap-2 ${slide.open ? `pb-[${PANEL_PADDING}px]` : "pb-10"}`}>
 			{/* ストリート切替ボタン */}
 			<div className="flex gap-x-1.5">
 				{STREETS.map((st) => {

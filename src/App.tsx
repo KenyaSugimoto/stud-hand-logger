@@ -15,7 +15,8 @@ import { StudGameType } from "./types";
 export default function App() {
 	const { gameType } = useTableStore();
 
-	const isMobile = useIsMobile();
+	// 将来的にPC版も公開するが、今はモバイル版のみ提供するため、非常に大きなブレークポイントを指定して常にモバイル版を返す
+	const isMobile = useIsMobile(99999);
 
 	if (isMobile) {
 		// 📱 モバイル：テーブルなし・入力ビューのみ

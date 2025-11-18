@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { STREET_TO_VISIBLE_CARD_COUNT } from "../../consts";
 import { useTableStore } from "../../hooks/useTableStore";
 import type { Card, CardId, PlayerId, Seat, Slot, SlotIndex, Street } from "../../types";
@@ -52,7 +53,7 @@ export const MobilePlayerRow = (props: Props) => {
 
 	const historyText = history.length > 0 ? history.join(" / ") : "";
 
-	const FirstActorMark = () => {
+	const FirstActorMark = useMemo(() => {
 		const isBringInCandidate = bringInCandidate === playerId;
 		if (is3rd && isBringInCandidate) {
 			return <span className="text-blue-500 font-bold">↓</span>;
@@ -64,7 +65,7 @@ export const MobilePlayerRow = (props: Props) => {
 		}
 
 		return isFirstActor ? <span className="text-orange-500 font-bold">↓</span> : <span>$ </span>;
-	};
+	}, [bringInCandidate, bringInPlayer, is3rd, isFirstActor, playerId]);
 
 	return (
 		<div
@@ -73,12 +74,10 @@ export const MobilePlayerRow = (props: Props) => {
 			}`}
 		>
 			{/* Player */}
-			<div className="w-2 text-[11px] font-semibold text-gray-700">{playerId}</div>
+			<div className="w-1 text-[11px] font-semibold text-gray-700">{playerId}</div>
 
 			{/* bring-in / first actor */}
-			<div className="w-2 text-center text-[16px] font-mono">
-				<FirstActorMark />
-			</div>
+			<div className="w-1 text-center text-[16px] font-mono pl-0.5">{FirstActorMark}</div>
 
 			{/* カード（12 / 3456 / 7） */}
 			<div className="flex items-center gap-1">
@@ -134,8 +133,10 @@ export const MobilePlayerRow = (props: Props) => {
 			{/* 履歴 */}
 			<div className="w-64 text-[10px] text-black font-semibold font-mono text-left">{historyText}</div>
 
-			{/* アクション */}
-			<MobileActionButtons street={street} playerId={playerId} isBringInCandidate={bringInCandidate === playerId} />
+			{/* アクション 右寄せ */}
+			<div className="flex-1 flex justify-end">
+				<MobileActionButtons street={street} playerId={playerId} isBringInCandidate={bringInCandidate === playerId} />
+			</div>
 		</div>
 	);
 };

@@ -20,7 +20,7 @@ export const MobileCardSelect = () => {
 	const cardH = Math.round(cardW * CARD_ASPECT_RATIO);
 
 	const MIN_CARD_W = 20;
-	const MAX_CARD_W = 60;
+	const MAX_CARD_W = 40;
 
 	useEffect(() => {
 		const calc = () => {

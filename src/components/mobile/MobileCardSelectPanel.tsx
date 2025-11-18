@@ -8,13 +8,14 @@ type Props = {
 };
 
 export const MobileCardSelectPanel = ({ open, toggle }: Props) => {
+	const PANEL_MAX_HEIGHT = 420;
 	return (
 		<div className="fixed inset-x-0 bottom-0 z-40 pointer-events-none">
 			<div
 				className={`
 					bg-white shadow-2xl border-t rounded-t-xl
 					transition-all duration-300 overflow-hidden pointer-events-auto
-					${open ? "max-h-[420px]" : "max-h-10"}
+					${open ? `max-h-[${PANEL_MAX_HEIGHT}px]` : "max-h-10"}
 				`}
 			>
 				<button type="button" onClick={toggle} className="w-full py-2 flex justify-center items-center text-gray-600">
