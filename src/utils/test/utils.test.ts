@@ -1,6 +1,8 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
+import type { TableState } from "../../hooks/useTableStore";
 import type { Action, ActionType, PlayerId } from "../../types";
-import { shouldEndStreet, suitGlyph } from "../utils";
+import { generateDeck } from "../deck";
+import { findEmptySlotForStreet, getNextCurrentSlot, shouldEndStreet, suitGlyph, updateCurrentSlot } from "../utils";
 
 const A = (playerId: PlayerId, type: ActionType): Action => ({ playerId, type });
 
@@ -132,5 +134,157 @@ describe("suitGlyph", () => {
 		expect(suitGlyph("h")).toBe("♥");
 		expect(suitGlyph("d")).toBe("♦");
 		expect(suitGlyph("c")).toBe("♣");
+	});
+});
+
+// ---------------------------------------------------------
+// 📌 共通の初期 TableState
+// ---------------------------------------------------------
+const makeState = (): TableState => ({
+	seats: {
+		P1: Array(7).fill(null),
+		P2: Array(7).fill(null),
+		P3: Array(7).fill(null),
+		P4: Array(7).fill(null),
+	},
+	cardsById: generateDeck(),
+	currentStreet: "3rd",
+	playersCount: 4,
+	alive: { P1: true, P2: true, P3: true, P4: true },
+	actions: {
+		"3rd": [],
+		"4th": [],
+		"5th": [],
+		"6th": [],
+		"7th": [],
+	},
+	currentSlot: null,
+	bringInPlayer: null,
+	bringInCandidate: null,
+});
+
+// ----------------------------------------------
+// ✨ findEmptySlotForStreet
+// ----------------------------------------------
+describe("findEmptySlotForStreet", () => {
+	test("最初の空 slot を返す（3rd）", () => {
+		const state = makeState();
+		// 全員 slot0 は空 → P1 slot0 を返す
+		const res = findEmptySlotForStreet(state, "3rd");
+
+		expect(res).toEqual({ playerId: "P1", slotIndex: 0 });
+	});
+
+	test("P1 の 3rd が埋まっている場合 → 次の P1 の空 slot を返す", () => {
+		const state = makeState();
+		state.seats.P1[0] = "As";
+
+		const res = findEmptySlotForStreet(state, "3rd");
+		expect(res).toEqual({ playerId: "P1", slotIndex: 1 });
+	});
+
+	test("P1 の 3rd すべて埋まっている → P2 slot0 を返す", () => {
+		const state = makeState();
+		state.seats.P1[0] = "As";
+		state.seats.P1[1] = "Ks";
+		state.seats.P1[2] = "Qs";
+
+		const res = findEmptySlotForStreet(state, "3rd");
+		expect(res).toEqual({ playerId: "P2", slotIndex: 0 });
+	});
+
+	test("alive=false のプレイヤーはスキップされる", () => {
+		const state = makeState();
+		state.alive.P1 = false;
+
+		const res = findEmptySlotForStreet(state, "3rd");
+		expect(res).toEqual({ playerId: "P2", slotIndex: 0 });
+	});
+
+	test("誰も空 slot が無い場合 → null", () => {
+		const state = makeState();
+		// 3rd の visibleCount=3 を全部埋める
+		for (const pid of ["P1", "P2", "P3", "P4"] as PlayerId[]) {
+			state.seats[pid][0] = "As";
+			state.seats[pid][1] = "Ks";
+			state.seats[pid][2] = "Qs";
+		}
+
+		const res = findEmptySlotForStreet(state, "3rd");
+		expect(res).toBeNull();
+	});
+});
+
+// ----------------------------------------------
+// ✨ getNextCurrentSlot
+// ----------------------------------------------
+describe("getNextCurrentSlot", () => {
+	test("現ストリートで空 slot があればそれを返す", () => {
+		const state = makeState();
+		state.currentStreet = "3rd";
+
+		const res = getNextCurrentSlot(state);
+		expect(res).toEqual({ playerId: "P1", slotIndex: 0 });
+	});
+
+	test("現ストリートが埋まっている → 次ストリートの slot を返す", () => {
+		const state = makeState();
+		state.currentStreet = "3rd";
+
+		// 3rd を全員埋める
+		for (const pid of ["P1", "P2", "P3", "P4"] as PlayerId[]) {
+			state.seats[pid][0] = "As";
+			state.seats[pid][1] = "Ks";
+			state.seats[pid][2] = "Qs";
+		}
+
+		const res = getNextCurrentSlot(state);
+		// 次は 4th: slotIndex=3
+		expect(res).toEqual({ playerId: "P1", slotIndex: 3 });
+	});
+
+	test("全ストリートが埋まっている → null", () => {
+		const state = makeState();
+
+		for (let s = 0; s < 7; s++) {
+			for (const pid of ["P1", "P2", "P3", "P4"] as PlayerId[]) {
+				state.seats[pid][s] = "As"; // 適当に埋める
+			}
+		}
+
+		const res = getNextCurrentSlot(state);
+		expect(res).toBeNull();
+	});
+});
+
+// ----------------------------------------------
+// ✨ updateCurrentSlot
+// ----------------------------------------------
+describe("updateCurrentSlot", () => {
+	test("setCurrentSlot に nextSlot を渡す", () => {
+		const state = makeState();
+
+		const mockFn = vi.fn();
+
+		updateCurrentSlot(state, mockFn);
+
+		expect(mockFn).toHaveBeenCalledWith({ playerId: "P1", slotIndex: 0 });
+	});
+
+	test("全て埋まっている場合 → setCurrentSlot(null)", () => {
+		const state = makeState();
+
+		for (let i = 0; i < 7; i++) {
+			state.seats.P1[i] = "As";
+			state.seats.P2[i] = "As";
+			state.seats.P3[i] = "As";
+			state.seats.P4[i] = "As";
+		}
+
+		const mockFn = vi.fn();
+
+		updateCurrentSlot(state, mockFn);
+
+		expect(mockFn).toHaveBeenCalledWith(null);
 	});
 });

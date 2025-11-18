@@ -60,7 +60,7 @@ export const suitGlyph = (s: Suit) => ({ h: "♥", d: "♦", c: "♣", s: "♠" 
 // TODO: ↓ ここより下の関数 単体テスト未実装
 
 // 特定ストリートで最初の空スロットを返す共通関数
-const findEmptySlotForStreet = (state: TableState, street: Street): Slot | null => {
+export const findEmptySlotForStreet = (state: TableState, street: Street): Slot | null => {
 	const { seats, playersCount, alive } = state;
 
 	const visibleCount = STREET_TO_VISIBLE_CARD_COUNT[street];
@@ -83,7 +83,7 @@ const findEmptySlotForStreet = (state: TableState, street: Street): Slot | null 
 };
 
 // 次に設定するCurrentSlotを取得する関数
-const getNextCurrentSlot = (state: TableState): Slot | null => {
+export const getNextCurrentSlot = (state: TableState): Slot | null => {
 	const { currentStreet } = state;
 
 	// 1. 現ストリートで探す
