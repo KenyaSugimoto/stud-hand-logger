@@ -31,7 +31,7 @@ export const GameTypeSelect = () => {
 							className={`
 							px-4 py-2 text-sm font-semibold transition-all
 							border border-b-0 rounded-t-md
-							${active ? `${ACTIVE_TAB[gt]} shadow-md -mb-[1px]` : `${INACTIVE_TAB[gt]} border-gray-300`}
+							${active ? `${ACTIVE_TAB[gt]} shadow-md -mb-px` : `${INACTIVE_TAB[gt]} border-gray-300`}
 							`}
 						>
 							{GAME_TYPE_LABELS[gt]}

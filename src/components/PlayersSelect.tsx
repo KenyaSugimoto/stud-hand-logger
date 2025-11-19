@@ -13,7 +13,7 @@ export const PlayersSelect = () => {
 		<div className="flex flex-col px-1 gap-2 items-start">
 			<p
 				className={`text-sm font-bold tracking-wide ${
-					gameType === "STUD_HI" ? "text-blue-300" : gameType === "RAZZ" ? "text-orange-300" : "text-green-300"
+					gameType === "STUD_HI" ? "text-blue-600" : gameType === "RAZZ" ? "text-orange-600" : "text-green-600"
 				}`}
 			>
 				SEAT COUNT
