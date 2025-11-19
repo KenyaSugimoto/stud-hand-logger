@@ -13,7 +13,7 @@ export const MobileCardSelectPanel = ({ open, toggle }: Props) => {
 		<div className="fixed inset-x-0 bottom-0 z-40 pointer-events-none">
 			<div
 				className={`
-					bg-white shadow-2xl border-t rounded-t-xl
+					bg-white shadow-[0_0_15px_rgba(0,0,0,0.25)] border-t rounded-t-xl
 					transition-all duration-300 overflow-hidden pointer-events-auto
 					${open ? MAX_H_CLASS : "max-h-10"}
 				`}

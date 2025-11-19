@@ -18,11 +18,17 @@ export default function App() {
 	// 将来的にPC版も公開するが、今はモバイル版のみ提供するため、非常に大きなブレークポイントを指定して常にモバイル版を返す
 	const isMobile = useIsMobile(99999);
 
+	const bgColorByGameType: Record<StudGameType, string> = {
+		[StudGameType.StudHi]: "bg-blue-50",
+		[StudGameType.Razz]: "bg-orange-50",
+		[StudGameType.Stud8]: "bg-green-50",
+	};
+
 	if (isMobile) {
 		// 📱 モバイル：テーブルなし・入力ビューのみ
 		return (
-			<div className="w-full min-h-screen flex flex-col bg-white">
-				<div className="w-full shrink-0 flex items-center pt-2 border-b border-gray-200">
+			<div className={`w-full min-h-screen flex flex-col ${bgColorByGameType[gameType]}`}>
+				<div className="w-full shrink-0 flex items-center pt-2 border-b border-gray-200 sticky top-0 z-50 bg-white">
 					<GameTypeSelect />
 				</div>
 
@@ -46,7 +52,7 @@ export default function App() {
 	return (
 		<div className="w-full h-screen flex flex-col overflow-hidden bg-white">
 			{/* 上部 tabs */}
-			<div className="w-full shrink-0 flex items-center pt-2 border-b border-gray-200">
+			<div className="w-full shrink-0 flex items-center pt-2 border-b border-gray-200 sticky top-0 z-50 bg-white">
 				<GameTypeSelect />
 			</div>
 

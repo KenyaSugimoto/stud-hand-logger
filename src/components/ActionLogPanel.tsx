@@ -155,7 +155,7 @@ export const ActionLogPanel = () => {
 	const color = GAME_COLORS[gameType];
 
 	return (
-		<div className="p-1 bg-gray-50">
+		<div className="p-1">
 			<div className="flex justify-between items-center mb-2">
 				<h3 className="font-semibold text-gray-700">Action Log</h3>
 
