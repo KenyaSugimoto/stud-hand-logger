@@ -336,7 +336,6 @@ export const getBringInCandidate = (gameType: StudGameType, state: TableState): 
 	return worst?.pid ?? null;
 };
 
-// TODO: 以下、単体テスト未実装
 /**
  * 🎯 現時点で「次にアクションすべきプレイヤー」を返す
  * ストリート終了なら null
@@ -344,24 +343,23 @@ export const getBringInCandidate = (gameType: StudGameType, state: TableState): 
 export const getCurrentActor = (state: TableState, gameType: StudGameType): PlayerId | null => {
 	const street = state.currentStreet;
 	const actions = state.actions[street];
-	const players = getPlayers(state.playersCount).filter((p) => state.alive[p]);
+	const alivePlayers = getPlayers(state.playersCount).filter((p) => state.alive[p]);
+
+	if (alivePlayers.length === 0) return null;
 
 	// --- ストリート終了なら null ---
-	if (shouldEndStreet(actions, players)) return null;
+	if (shouldEndStreet(actions, alivePlayers)) return null;
 
 	// ------ 3rd street 特殊ルール ------
 	if (street === "3rd") {
-		const briPlayer = state.bringInPlayer;
-		if (!briPlayer) return null;
-
-		if (actions.length === 0) {
-			// bring-in がまだ押されていない → bri ボタンを強調したい
-			return state.bringInCandidate; // または briPlayer
+		// bring-in プレイヤーが未確定なら、 bring-in 候補を返す
+		if (!state.bringInPlayer) {
+			return state.bringInCandidate ?? null;
 		}
 
 		// bring-in が押された後は普通にアクション順へ
 		const last = actions[actions.length - 1].playerId;
-		return getNextAlivePlayer(players, last);
+		return getNextAlivePlayer(alivePlayers, last);
 	}
 
 	// ------ 4th〜7th ------
@@ -378,12 +376,12 @@ export const getCurrentActor = (state: TableState, gameType: StudGameType): Play
 	const lastActor = actions[actions.length - 1].playerId;
 
 	// 次の alive プレイヤーを探す
-	return getNextAlivePlayer(players, lastActor);
+	return getNextAlivePlayer(alivePlayers, lastActor);
 };
 
 /** 時計回りで次の alive player を返す */
-const getNextAlivePlayer = (players: PlayerId[], current: PlayerId): PlayerId => {
-	const idx = players.indexOf(current);
-	if (idx === -1) return players[0];
-	return players[(idx + 1) % players.length];
+const getNextAlivePlayer = (alivePlayers: PlayerId[], current: PlayerId): PlayerId => {
+	const idx = alivePlayers.indexOf(current);
+	if (idx === -1) return alivePlayers[0];
+	return alivePlayers[(idx + 1) % alivePlayers.length];
 };

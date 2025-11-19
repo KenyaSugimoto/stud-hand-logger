@@ -19,7 +19,7 @@ export const MobileActionButtons = ({ street, playerId, isBringInCandidate }: Pr
 		addAction(street, { playerId, type: t });
 	};
 
-	const highlightColor: Record<StudGameType, string> = {
+	const bringInHighlightColor: Record<StudGameType, string> = {
 		[StudGameType.StudHi]: "bg-blue-500",
 		[StudGameType.Razz]: "bg-orange-500",
 		[StudGameType.Stud8]: "bg-green-500",
@@ -39,7 +39,7 @@ export const MobileActionButtons = ({ street, playerId, isBringInCandidate }: Pr
 						onClick={() => can && onClick(t)}
 						disabled={!can}
 						className={`text-[10px] px-1.5 py-1 rounded border text-white
-							${!can ? "bg-gray-400 opacity-40" : isHighlight ? `${highlightColor[gameType]} animate-pulse shadow-lg` : "bg-gray-700"}
+							${!can ? "bg-gray-400 opacity-40" : isHighlight ? `${bringInHighlightColor[gameType]} animate-pulse shadow-lg` : "bg-gray-700"}
 						`}
 					>
 						{t}

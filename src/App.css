@@ -52,7 +52,7 @@
 		transform: translateY(-1.5px);
 	}
 }
-
+/* TODO: 将来的にプレイヤーアクション強調に使用するかも */
 .subtle-bounce {
 	animation: subtleBounce 1.2s ease-in-out infinite;
 }
