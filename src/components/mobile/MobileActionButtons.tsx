@@ -1,6 +1,6 @@
 import { ACTIONS_3RD, ACTIONS_LATER } from "../../consts";
 import { useTableStore } from "../../hooks/useTableStore";
-import type { ActionType, PlayerId, Street } from "../../types";
+import { type ActionType, type PlayerId, type Street, StudGameType } from "../../types";
 import { canActMobile } from "../../utils/mobile";
 
 type Props = {
@@ -19,8 +19,14 @@ export const MobileActionButtons = ({ street, playerId, isBringInCandidate }: Pr
 		addAction(street, { playerId, type: t });
 	};
 
+	const bringInHighlightColor: Record<StudGameType, string> = {
+		[StudGameType.StudHi]: "bg-blue-500",
+		[StudGameType.Razz]: "bg-orange-500",
+		[StudGameType.Stud8]: "bg-green-500",
+	};
+
 	return (
-		<div className="flex gap-1">
+		<div className={`flex gap-1`}>
 			{actions.map((t) => {
 				const can = canActMobile(state, street, playerId, t);
 
@@ -33,7 +39,7 @@ export const MobileActionButtons = ({ street, playerId, isBringInCandidate }: Pr
 						onClick={() => can && onClick(t)}
 						disabled={!can}
 						className={`text-[10px] px-1.5 py-1 rounded border text-white
-							${!can ? "bg-gray-400 opacity-40" : isHighlight ? "bg-blue-500 animate-pulse shadow-lg" : "bg-gray-700"}
+							${!can ? "bg-gray-400 opacity-40" : isHighlight ? `${bringInHighlightColor[gameType]} animate-pulse shadow-lg` : "bg-gray-700"}
 						`}
 					>
 						{t}

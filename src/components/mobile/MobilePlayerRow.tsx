@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { STREET_TO_VISIBLE_CARD_COUNT } from "../../consts";
 import { useTableStore } from "../../hooks/useTableStore";
 import type { Card, CardId, PlayerId, Seat, Slot, SlotIndex, Street } from "../../types";
-import { getFirstActor } from "../../utils/getFirstActor";
+import { getCurrentActor, getFirstActor } from "../../utils/getFirstActor";
 import { CardSlot } from "../CardSlot";
 import { MobileActionButtons } from "./MobileActionButtons";
 
@@ -28,6 +28,9 @@ export const MobilePlayerRow = (props: Props) => {
 
 	// first actor
 	const isFirstActor = getFirstActor(state, gameType) === playerId;
+
+	const currentActor = getCurrentActor(state, gameType);
+	const isCurrentActor = currentActor === playerId;
 
 	const streetActions = state.actions[street];
 
@@ -71,10 +74,10 @@ export const MobilePlayerRow = (props: Props) => {
 		<div
 			className={`flex items-center gap-2 py-1 px-1 rounded-md bg-white border border-gray-200 ${
 				alive ? "" : "opacity-40 pointer-events-none"
-			}`}
+			} ${isCurrentActor ? "border-2 border-orange-500 rounded-md p-1 subtle-pulse" : ""}`}
 		>
 			{/* Player */}
-			<div className="w-1 text-[11px] font-semibold text-gray-700">{playerId}</div>
+			<div className={`w-1 text-[11px] font-semibold text-gray-700`}>{playerId}</div>
 
 			{/* bring-in / first actor */}
 			<div className="w-1 text-center text-[16px] font-mono pl-0.5">{FirstActorMark}</div>

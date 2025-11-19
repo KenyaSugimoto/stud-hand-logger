@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 import type { TableState } from "../../hooks/useTableStore";
 import {
 	type Action,
+	type ActionType,
 	type Card,
 	type CardId,
 	type PlayerId,
@@ -12,6 +13,7 @@ import {
 import { generateDeck } from "../deck";
 import {
 	getBringInCandidate,
+	getCurrentActor,
 	getFirstActor,
 	getFirstActorForStreet,
 	getThirdStreetUpCard,
@@ -265,5 +267,120 @@ describe("getFirstActor", () => {
 
 		const pid = getFirstActor(state, StudGameType.StudHi);
 		expect(pid).toBe("P2");
+	});
+});
+
+const A = (p: PlayerId, t: ActionType): Action => ({ playerId: p, type: t });
+// ---------------------------------------------------------
+// 🎯 1) alivePlayers length = 0 の場合
+// ---------------------------------------------------------
+describe("getCurrentActor - alive player 0", () => {
+	test("alivePlayers が 0 → null", () => {
+		const state = makeBaseState();
+		state.alive = { P1: false, P2: false, P3: false, P4: false };
+
+		const result = getCurrentActor(state, StudGameType.StudHi);
+		expect(result).toBeNull();
+	});
+});
+
+// ---------------------------------------------------------
+// 🎯 2) 3rd Street ロジック
+// ---------------------------------------------------------
+describe("getCurrentActor - 3rd street", () => {
+	test("bring-in 未確定 → bringInCandidate を返す", () => {
+		const state = makeBaseState();
+		state.currentStreet = "3rd";
+		state.bringInCandidate = "P2";
+
+		const result = getCurrentActor(state, StudGameType.StudHi);
+		expect(result).toBe("P2");
+	});
+
+	test("bring-in も候補も無い → null", () => {
+		const state = makeBaseState();
+		state.currentStreet = "3rd";
+
+		expect(getCurrentActor(state, StudGameType.StudHi)).toBeNull();
+	});
+
+	test("bring-in 確定後 → 最後のアクターの次の alive", () => {
+		const state = makeBaseState();
+		state.currentStreet = "3rd";
+		state.bringInPlayer = "P2";
+
+		// P2 が bring-in → P3 fold
+		state.actions["3rd"] = [A("P2", "bri"), A("P3", "f")];
+
+		const result = getCurrentActor(state, StudGameType.StudHi);
+		// alive = P1,P2,P3,P4 / lastActor = P3 → next = P4
+		expect(result).toBe("P4");
+	});
+
+	test("ストリート終了なら null", () => {
+		const state = makeBaseState();
+		state.currentStreet = "3rd";
+		state.actions["3rd"] = [A("P2", "bri"), A("P1", "c"), A("P3", "c")];
+
+		expect(getCurrentActor(state, StudGameType.StudHi)).toBeNull();
+	});
+});
+
+// ---------------------------------------------------------
+// 🎯 3) 4th〜7th Street ロジック
+// ---------------------------------------------------------
+describe("getCurrentActor - 4th+ streets", () => {
+	test("アクション無し → firstActor を返す", () => {
+		const state = makeBaseState();
+		state.currentStreet = "4th";
+
+		// P1 が最強の upCard
+		state.seats.P1[2] = "As";
+		state.seats.P2[2] = "Kc";
+
+		const result = getCurrentActor(state, StudGameType.StudHi);
+		expect(result).toBe("P1");
+	});
+
+	test("最後のアクターの次の alive を返す", () => {
+		const state = makeBaseState();
+		state.currentStreet = "4th";
+		state.seats.P1[2] = "As";
+		state.seats.P2[2] = "Kd";
+
+		state.actions["4th"] = [A("P1", "x")];
+
+		expect(getCurrentActor(state, StudGameType.StudHi)).toBe("P2");
+	});
+
+	test("alive=false のプレイヤーはスキップされる", () => {
+		const state = makeBaseState();
+		state.currentStreet = "4th";
+
+		state.seats.P1[2] = "As";
+		state.seats.P2[2] = "Kd";
+
+		// P2 死亡
+		state.alive.P2 = false;
+
+		state.actions["4th"] = [A("P1", "x")];
+
+		// alive = P1,P3,P4 / last = P1 → next = P3
+		expect(getCurrentActor(state, StudGameType.StudHi)).toBe("P3");
+	});
+
+	test("ストリート終了なら null", () => {
+		const state = makeBaseState();
+		state.currentStreet = "4th";
+
+		state.seats.P1[2] = "As";
+		state.seats.P2[2] = "Kd";
+		state.seats.P3[2] = "9h";
+		state.seats.P4[2] = "8d";
+
+		// bet → 全員call → ストリート終了
+		state.actions["4th"] = [A("P1", "b"), A("P2", "c"), A("P3", "c"), A("P4", "c")];
+
+		expect(getCurrentActor(state, StudGameType.StudHi)).toBeNull();
 	});
 });
