@@ -1,5 +1,5 @@
 // App.tsx
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@vercel/analytics/next";
 import "./App.css";
 import { GameTypeSelect } from "./components/GameTypeSelect";
 import { MobileInputView } from "./components/mobile/MobileInputView";
