@@ -13,6 +13,7 @@ import {
 	type Street,
 	StudGameType,
 } from "../types";
+import { shouldEndStreet } from "./utils";
 
 // 役のカテゴリ(看板カードは4枚までなので、5枚役は存在しない)
 type BoardCategory = 0 | 1 | 2 | 3 | 4; // high / 1pair / 2pair / trips / quads
@@ -333,4 +334,56 @@ export const getBringInCandidate = (gameType: StudGameType, state: TableState): 
 	}
 
 	return worst?.pid ?? null;
+};
+
+// TODO: 以下、単体テスト未実装
+/**
+ * 🎯 現時点で「次にアクションすべきプレイヤー」を返す
+ * ストリート終了なら null
+ */
+export const getCurrentActor = (state: TableState, gameType: StudGameType): PlayerId | null => {
+	const street = state.currentStreet;
+	const actions = state.actions[street];
+	const players = getPlayers(state.playersCount).filter((p) => state.alive[p]);
+
+	// --- ストリート終了なら null ---
+	if (shouldEndStreet(actions, players)) return null;
+
+	// ------ 3rd street 特殊ルール ------
+	if (street === "3rd") {
+		const briPlayer = state.bringInPlayer;
+		if (!briPlayer) return null;
+
+		if (actions.length === 0) {
+			// bring-in がまだ押されていない → bri ボタンを強調したい
+			return state.bringInCandidate; // または briPlayer
+		}
+
+		// bring-in が押された後は普通にアクション順へ
+		const last = actions[actions.length - 1].playerId;
+		return getNextAlivePlayer(players, last);
+	}
+
+	// ------ 4th〜7th ------
+	// street開始時の first actor
+	const firstActor = getFirstActor(state, gameType);
+	if (!firstActor) return null;
+
+	if (actions.length === 0) {
+		// まだ誰もアクションしていない
+		return firstActor;
+	}
+
+	// 最後にアクションしたプレイヤー
+	const lastActor = actions[actions.length - 1].playerId;
+
+	// 次の alive プレイヤーを探す
+	return getNextAlivePlayer(players, lastActor);
+};
+
+/** 時計回りで次の alive player を返す */
+const getNextAlivePlayer = (players: PlayerId[], current: PlayerId): PlayerId => {
+	const idx = players.indexOf(current);
+	if (idx === -1) return players[0];
+	return players[(idx + 1) % players.length];
 };
