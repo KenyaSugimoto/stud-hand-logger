@@ -5,7 +5,7 @@ export const MAX_PLAYERS = 8;
 export const MIN_PLAYERS = 2;
 
 // 初期プレイヤー数を6に設定
-export const INITIAL_PLAYERS = 6;
+export const INITIAL_PLAYERS = 3;
 
 // 各ストリートで可能なアクション
 export const ACTIONS_3RD: ActionType[] = ["f", "c", "comp", "bri", "r"];
