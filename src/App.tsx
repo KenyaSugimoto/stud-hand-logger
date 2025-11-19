@@ -1,4 +1,5 @@
 // App.tsx
+import { Analytics } from "@vercel/analytics/react";
 import "./App.css";
 import { GameTypeSelect } from "./components/GameTypeSelect";
 import { MobileInputView } from "./components/mobile/MobileInputView";
@@ -44,6 +45,7 @@ export default function App() {
 				<div className="flex-1 overflow-y-auto">
 					<MobileInputView />
 				</div>
+				<Analytics />
 			</div>
 		);
 	}
@@ -84,6 +86,7 @@ export default function App() {
 
 				<SettingsSection />
 			</div>
+			<Analytics />
 		</div>
 	);
 }
