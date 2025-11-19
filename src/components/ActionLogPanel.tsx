@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { GAME_COLORS, GAME_TYPE_LABELS, STREETS } from "../consts";
 import { getPlayers, useTableStore } from "../hooks/useTableStore";
 import type { Action, Card, CardId, PlayerId, Seat, Street } from "../types";
@@ -6,10 +6,16 @@ import { getFirstActorForStreet } from "../utils/getFirstActor";
 import { suitGlyph } from "../utils/utils";
 
 /* 🂠 カード → テキスト変換 */
-function cardToStr(card: Card | null): string {
+function cardToStr(card: Card | null, suitOutputMode: SuitOutputMode): string {
 	if (!card) return "";
 	if (card.kind === "unknown") return "Xx";
 
+	// letter mode
+	if (suitOutputMode === "letter") {
+		return `${card.rank}${card.suit}`;
+	}
+
+	// symbol mode
 	const glyph = suitGlyph(card.suit);
 	return `${card.rank}${glyph}`;
 }
@@ -37,13 +43,14 @@ const buildPlayerCards = (
 	cardsById: Record<CardId, Card>,
 	pid: PlayerId,
 	street: Street,
+	suitOutputMode: SuitOutputMode,
 ): string => {
 	const seat = seats[pid];
 
 	// slotIndex → 0〜6 のカードデータ取得
 	const get = (i: number) => {
 		const id = seat[i];
-		return id ? cardToStr(cardsById[id]) : "Xx";
+		return id ? cardToStr(cardsById[id], suitOutputMode) : "Xx";
 	};
 
 	// --- street ごとの表示 ---
@@ -76,11 +83,14 @@ const buildPlayerCards = (
 	return "";
 };
 
+type SuitOutputMode = "symbol" | "letter";
+
 export const ActionLogPanel = () => {
 	const { games, gameType } = useTableStore();
 	const state = games[gameType];
-
 	const { seats, cardsById, actions, playersCount, bringInPlayer, bringInCandidate } = state;
+
+	const [suitOutputMode, setSuitOutputMode] = useState<SuitOutputMode>("symbol");
 
 	const players: PlayerId[] = useMemo(() => getPlayers(playersCount), [playersCount]);
 
@@ -111,7 +121,7 @@ export const ActionLogPanel = () => {
 		const alivePlayers = players.filter((pid) => isAliveAtStreet(pid, street));
 
 		for (const pid of alivePlayers) {
-			const cards = buildPlayerCards(seats, cardsById, pid, street);
+			const cards = buildPlayerCards(seats, cardsById, pid, street, suitOutputMode);
 			const acts = streetActions
 				.filter((a) => a.playerId === pid)
 				.map((a) => a.type)
@@ -172,6 +182,23 @@ export const ActionLogPanel = () => {
 			<pre className="text-sm whitespace-pre-wrap leading-6 bg-white border rounded-sm p-1">
 				{fullText ? fullText : "\n\n\n\n\n\n\n\n"}
 			</pre>
+
+			<div className="flex justify-end gap-2 pt-1">
+				<button
+					type="button"
+					onClick={() => setSuitOutputMode("symbol")}
+					className={`px-2 py-1 text-sm rounded ${suitOutputMode === "symbol" ? color.accent : "bg-gray-100"}`}
+				>
+					♠♥♦♣
+				</button>
+				<button
+					type="button"
+					onClick={() => setSuitOutputMode("letter")}
+					className={`px-2 py-1 text-sm rounded ${suitOutputMode === "letter" ? color.accent : "bg-gray-100"}`}
+				>
+					s h d c
+				</button>
+			</div>
 		</div>
 	);
 };
