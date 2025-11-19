@@ -44,24 +44,31 @@
 }
 
 @keyframes subtleBounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-1.5px);
-  }
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(-1.5px);
+	}
 }
 
 .subtle-bounce {
-  animation: subtleBounce 1.2s ease-in-out infinite;
+	animation: subtleBounce 1.2s ease-in-out infinite;
 }
 
 @keyframes subtlePulse {
-  0%   { border-color: rgba(251,146,60,0.3); }
-  50%  { border-color: rgba(251,146,60,0.6); }
-  100% { border-color: rgba(251,146,60,0.3); }
+	0% {
+		border-color: rgba(251, 146, 60, 0.3);
+	}
+	50% {
+		border-color: rgba(251, 146, 60, 0.6);
+	}
+	100% {
+		border-color: rgba(251, 146, 60, 0.3);
+	}
 }
 
 .subtle-pulse {
-  animation: subtlePulse 1.8s ease-in-out infinite;
+	animation: subtlePulse 1.8s ease-in-out infinite;
 }
