@@ -1,73 +1,68 @@
-# React + TypeScript + Vite
+# 📘 Stud Hand Logger
+### *Seven Card Stud / Razz / Stud Hi-Lo 用ハンド記録アプリ*
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ブラウザ上で動く **Stud 系ゲーム専用のハンド記録アプリ**です。
+スマホでのリアルタイム入力を想定し、カード入力やアクション入力をできるだけ直感的・高速に行えるように設計されています。
 
-Currently, two official plugins are available:
+URL: https://stud-hand-logger.vercel.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🚀 主な特徴
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+### ✔ 3種類の Stud ゲームに対応
+- **Seven Card Stud (StudHi)**
+- **Seven Card Stud Hi-Lo 8 or Better (Stud8)**
+- **Razz**
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### ✔ スマホ完全対応（モバイル UI 最適化）
+- ワンタップでカード選択
+- スロット式で 3rd〜7th のカードを配置
+- bring-in や complete など Stud 固有アクションも選択式
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### ✔ アクション履歴の自動処理
+- `fold` → 自動的に alive=false
+- `bri`（bring-in）→ bring-in プレイヤーとして記録
+- ストリート終了条件を満たすと **自動で next street に遷移**
+  → （ロジックは Zustand ストア内で管理）
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### ✔ Stud 形式のハンド履歴を自動生成
+- 3rd〜7th のカードを Stud 流儀で整形
+- **7th はスラッシュ `/` の右側に表示**
+- fold 済みプレイヤーは以降のストリートでは非表示
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### ✔ 操作ミスにも強い
+- 直前のアクション取り消し
+- ストリート単位でのリセット
+- プレイヤー数変更（2〜8人）
+
+---
+
+## 🧩 画面イメージ（概要）
+
+- ゲームタイプ選択
+- プレイヤー数設定（2〜8人）
+- カード入力画面（Mobile UI）
+- アクション入力画面
+- 履歴プレビュー表示
+
+---
+
+## 🛠 技術スタック
+
+| 項目 | 使用技術 |
+|------|-----------|
+| ライブラリ | React + TypeScript |
+| 状態管理 | Zustand |
+| スタイリング | Tailwind CSS |
+| ビルド / Dev | Vite |
+| デプロイ | Vercel |
+
